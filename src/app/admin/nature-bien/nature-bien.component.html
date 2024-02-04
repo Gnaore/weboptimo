@@ -1,0 +1,136 @@
+<div>
+    <p-button (onClick)="showModalEdit = true" type="button" icon="pi pi-plus" label="Nouvelle ligne"
+        styleClass="p-button-text mb-3"></p-button>
+    <p-table styleClass="p-datatable-striped p-datatable-gridlines" [resizableColumns]="true"
+        [value]="[].constructor(5)" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} enregistrements"
+        [rowsPerPageOptions]="[5, 10, 20]">
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="code">
+                    <div class="flex align-items-center">
+                        Famille
+                        <p-sortIcon field="col.field"></p-sortIcon>
+                        <p-columnFilter type="text" field="name" display="menu" matchMode="in" [showMatchModes]="false"
+                            [showOperator]="false" [showAddButton]="false" [showClearButton]="false"></p-columnFilter>
+                    </div>
+                </th>
+                <th pSortableColumn="code">
+                    <div class="flex align-items-center">
+                        Nature du bien
+                        <p-sortIcon field="col.field"></p-sortIcon>
+                        <p-columnFilter type="text" field="name" display="menu" matchMode="in" [showMatchModes]="false"
+                            [showOperator]="false" [showAddButton]="false" [showClearButton]="false"></p-columnFilter>
+                    </div>
+                </th>
+                <th pSortableColumn="code">
+                    <div class="flex align-items-center">
+                        Durée
+                        <p-sortIcon field="col.field"></p-sortIcon>
+                        <p-columnFilter type="text" field="name" display="menu" matchMode="in" [showMatchModes]="false"
+                            [showOperator]="false" [showAddButton]="false" [showClearButton]="false"></p-columnFilter>
+                    </div>
+                </th>
+                <th pSortableColumn="code">
+                    <div class="flex align-items-center">
+                        Taux %
+                        <p-sortIcon field="col.field"></p-sortIcon>
+                        <p-columnFilter type="text" field="name" display="menu" matchMode="in" [showMatchModes]="false"
+                            [showOperator]="false" [showAddButton]="false" [showClearButton]="false"></p-columnFilter>
+                    </div>
+                </th>
+                <th pSortableColumn="code">
+                    <div class="flex align-items-center">
+                        N° série
+                        <p-sortIcon field="col.field"></p-sortIcon>
+                        <p-columnFilter type="text" field="name" display="menu" matchMode="in" [showMatchModes]="false"
+                            [showOperator]="false" [showAddButton]="false" [showClearButton]="false"></p-columnFilter>
+                    </div>
+                </th>
+                <th pSortableColumn="code">
+                    <div class="flex align-items-center">
+                        N° compte immobilisation
+                        <p-sortIcon field="col.field"></p-sortIcon>
+                        <p-columnFilter type="text" field="name" display="menu" matchMode="in" [showMatchModes]="false"
+                            [showOperator]="false" [showAddButton]="false" [showClearButton]="false"></p-columnFilter>
+                    </div>
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-customer>
+            <tr>
+                <td>
+
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorright">
+            <p-button type="button" icon="pi pi-file-import" label="Importer les données"
+                styleClass="p-button-text"></p-button>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- Modal d'édition d'une ligne -->
+<p-dialog header="Edition d'une ligne" [(visible)]="showModalEdit" [modal]="true" [style]="{ width: '40vw' }"
+    [draggable]="false" [resizable]="false">
+    <div class="grid">
+        <div class="col-6">
+            <div class="field">
+                <label>Famille</label>
+                <p-dropdown styleClass="w-full" [options]="[]" [(ngModel)]="selectedFamille"
+                    [showClear]="true" [filter]="true" placeholder="Choisir la famille"></p-dropdown>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="field">
+                <label>Nature du bien</label>
+                <input type="text" pInputText class="block w-full" />
+            </div>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-6">
+            <div class="field">
+                <label>Durée</label>
+                <p-inputNumber inputId="integeronly" suffix="an(s)" class="block" styleClass="w-full"></p-inputNumber>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="field">
+                <label>Taux %</label>
+                <p-inputNumber inputId="percent" mode="decimal" [minFractionDigits]="2" suffix="%" class="block" styleClass="w-full"></p-inputNumber>
+            </div>
+        </div>
+    </div>
+    <div>
+        <p-checkbox label="Amortissable" [binary]="true" inputId="binary" [(ngModel)]="checked"></p-checkbox>
+    </div>
+    <hr>
+    <div class="field">
+        <label>Amortissement</label>
+        <p-dropdown [disabled]="!checked" styleClass="w-full" [options]="['Linéaire', 'Dégressif']" [(ngModel)]="selectedFamille"
+            [showClear]="true" [filter]="true" placeholder="Choisir la famille"></p-dropdown>
+    </div>
+    <div class="field">
+        <label>N° compte immobilisation</label>
+        <input type="text" pInputText class="block w-full" />
+    </div>
+    <div class="field">
+        <label>N° compte amortissement</label>
+        <input type="text" [disabled]="!checked" pInputText class="block w-full" />
+    </div>
+    <div class="field">
+        <label>N° compte dotation</label>
+        <input type="text" [disabled]="!checked" pInputText class="block w-full" />
+    </div>
+    <div class="text-center mt-2">
+        <p-button type="button" icon="pi pi-times" label="Annuler" styleClass="p-button-text p-button-danger"
+            class="mr-2"></p-button>
+        <p-button type="button" icon="pi pi-save" label="Enregistrer"></p-button>
+    </div>
+</p-dialog>

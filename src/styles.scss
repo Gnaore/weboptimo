@@ -1,0 +1,69 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/primeng/resources/primeng.min.css";
+@import "../node_modules/primeflex/primeflex.scss";
+@import "../node_modules/primeicons/primeicons.css";
+@import "../node_modules/prismjs/themes/prism-coy.css";
+@import "assets/demo/flags/flags.css";
+@import "./assets/demo/documentation.scss";
+
+body {
+    filter: blur(.25px);
+}
+
+.treeview {
+    padding: 5px;
+    width: max-content;
+
+    li {
+        list-style-type: none;
+        cursor: default;
+
+        .treeview-zone::before {
+            content: '🌐';
+            margin-right: 5px;
+        }
+
+        .treeview-site::before {
+            content: '🏢';
+            margin-right: 5px;
+        }
+
+        .treeview-localisation::before {
+            content: '📁';
+            margin-right: 5px;
+        }
+
+        .sub-treeview {
+            position: relative;
+            padding-left: 25px;
+            max-height: 100vh;
+            overflow: hidden;
+            transition: max-height 0.2s ease-in-out;
+
+            &.hide {
+                max-height: 0vh;
+            }
+
+            li {
+                padding: 3px 0;
+
+                &.active {
+                    font-weight: bold;
+                    color: #607d8b;
+                    background-color: #8bb3c728;
+                    border-radius: 3rem;
+                    padding-inline: 10px;
+                }
+            }
+
+            &::before {
+                position: absolute;
+                content: '';
+                left: 10px;
+                width: 1.5rem;
+                height: 100%;
+                border-left: 0.5px solid rgba(0, 0, 0, 0.24);
+            }
+        }
+    }
+}

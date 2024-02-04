@@ -1,0 +1,135 @@
+<div class="layout-wrapper fadein animation-duration-500"
+    [ngClass]="{'layout-wrapper-menu-active':sidebarActive,
+                                        'layout-overlay-menu':overlay, 'p-ripple-disabled': !app.ripple, 'p-input-filled': app.inputStyle === 'filled'}">
+
+    <app-topbar></app-topbar>
+
+    <div class="layout-main" style="height: 100vh;">
+        <div class="layout-main-content" style="height: 100%; display: flex; flex-direction: column;">
+            <p-menubar [model]="items" styleClass="p-1 border-noround"></p-menubar>
+            <div style="padding: 15px; flex-grow: 1;">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal clients -->
+<p-dialog header="Liste des clients" [(visible)]="showModalClient" [modal]="true"
+    [style]="{ width: '60vw', height: '60vw' }" [draggable]="false" [resizable]="false">
+    <app-client></app-client>
+</p-dialog>
+
+<!-- Modal bon de commande -->
+<p-dialog header="Bon de commande" [(visible)]="showModalBonCom" [modal]="true"
+    [style]="{ width: '60vw', height: '60vw' }" [draggable]="false" [resizable]="false">
+    <app-bon-commande></app-bon-commande>
+</p-dialog>
+
+<!-- Modal famille -->
+<p-dialog header="Liste des familles" [(visible)]="showModalFamille" [modal]="true"
+    [style]="{ width: '60vw', height: '60vw' }" [draggable]="false" [resizable]="false">
+    <app-famille></app-famille>
+</p-dialog>
+
+<!-- Modal nature du bien -->
+<p-dialog header="Nature du bien" [(visible)]="showModalNatBien" [modal]="true"
+    [style]="{ width: '80vw', height: '60vw' }" [draggable]="false" [resizable]="false">
+    <app-nature-bien></app-nature-bien>
+</p-dialog>
+
+<!-- Modal fournisseur -->
+<p-dialog header="Liste des fournisseurs" [(visible)]="showModalFournisseur" [modal]="true"
+    [style]="{ width: '80vw', height: '60vw' }" [draggable]="false" [resizable]="false">
+    <app-fournisseur></app-fournisseur>
+</p-dialog>
+
+<!-- Modal paramètres -->
+<p-dialog header="Paramètres" [(visible)]="showModalParam" [modal]="true" [style]="{ width: '40vw' }"
+    [draggable]="false" [resizable]="false">
+    <app-parametres></app-parametres>
+</p-dialog>
+
+<!-- Modal groupe -->
+<p-dialog header="Groupe d'utilisateurs" [(visible)]="showModalGroup" [modal]="true"
+    [style]="{ width: '50vw', height: '50vw' }" [draggable]="false" [resizable]="false">
+    <app-groupe></app-groupe>
+</p-dialog>
+
+<!-- Modal utilisateur -->
+<p-dialog header="Gestion des utilisateurs" [(visible)]="showModalUser" [modal]="true"
+    [style]="{ width: '50vw', height: '50vw'}" [draggable]="false" [resizable]="false">
+    <app-utilisateur></app-utilisateur>
+</p-dialog>
+
+<!-- Modal changement de mot de passe -->
+<p-dialog header="Paramètres" [(visible)]="showModalMdp" [modal]="true" [style]="{ width: '40vw' }" [draggable]="false"
+    [resizable]="false">
+    <div class="field">
+        <label>Groupe</label>
+        <input type="text" pInputText class="block w-full" disabled />
+    </div>
+    <div class="field">
+        <label>Identification</label>
+        <input type="text" pInputText class="block w-full" />
+    </div>
+    <div class="grid">
+        <div class="col-6">
+            <div class="field">
+                <label>Mot de passe</label>
+                <p-password [toggleMask]="true" promptLabel="Entrez un mot de passe" weakLabel="Faible"
+                    strongLabel="Fort" mediumLabel="Moyen" class="block" styleClass="w-full"
+                    inputStyleClass="w-full"></p-password>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="field">
+                <label>Confirmer le mot de passe</label>
+                <p-password [toggleMask]="true" promptLabel="Entrez un mot de passe" weakLabel="Faible"
+                    strongLabel="Fort" mediumLabel="Moyen" class="block" styleClass="w-full"
+                    inputStyleClass="w-full"></p-password>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-2">
+        <p-button type="button" icon="pi pi-times" label="Annuler" styleClass="p-button-text p-button-danger"
+            class="mr-2"></p-button>
+        <p-button type="button" icon="pi pi-save" label="Enregistrer"></p-button>
+    </div>
+</p-dialog>
+
+<!-- Modal biens orphelins -->
+<p-dialog header="Liste des biens orphelins" [(visible)]="showModalBiensOrp" [modal]="true"
+    [style]="{ width: '70vw', height: '60vw' }" [draggable]="false" [resizable]="false">
+    <app-bien-orphelin></app-bien-orphelin>
+</p-dialog>
+
+<!-- Modal zone -->
+<p-dialog header="Liste des zones" [(visible)]="showModalZone" [modal]="true"
+    [style]="{ width: '60vw', height: '50vw' }" [draggable]="false" [resizable]="false">
+    <app-zone></app-zone>
+</p-dialog>
+
+<!-- Modal site -->
+<p-dialog header="Liste des sites" [(visible)]="showModalSite" [modal]="true"
+    [style]="{ width: '60vw', height: '50vw' }" [draggable]="false" [resizable]="false">
+    <app-site></app-site>
+</p-dialog>
+
+<!-- Modal bien -->
+<p-dialog header="Liste des biens" [(visible)]="showModalBien" [modal]="true"
+    [style]="{ width: '70vw', height: '50vw' }" [draggable]="false" [resizable]="false">
+    <app-bien></app-bien>
+</p-dialog>
+
+<!-- Modal localisation -->
+<p-dialog header="Liste des localisations" [(visible)]="showModalLocalisation" [modal]="true"
+    [style]="{ width: '70vw', height: '50vw' }" [draggable]="false" [resizable]="false">
+    <app-localisation></app-localisation>
+</p-dialog>
+
+<!-- Modal bordereau -->
+<p-dialog header="Liste des bordereaux" [(visible)]="showModalBordereau" [modal]="true"
+    [style]="{ width: '60vw', height: '50vw' }" [draggable]="false" [resizable]="false">
+    <app-bordereau></app-bordereau>
+</p-dialog>
