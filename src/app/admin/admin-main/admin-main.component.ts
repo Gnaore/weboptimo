@@ -45,7 +45,9 @@ export class AdminMainComponent implements OnInit {
   showModalGroup: boolean = false;
   showModalUser: boolean = false;
 
-  constructor(public renderer: Renderer2, private primengConfig: PrimeNGConfig, public app: AppComponent) { }
+  constructor(public renderer: Renderer2, private primengConfig: PrimeNGConfig,
+    public app: AppComponent) { }
+
   ngOnInit(): void {
     this.items = [
       {
@@ -341,6 +343,8 @@ export class AdminMainComponent implements OnInit {
   onTopbarSubItemClick(event) {
     event.preventDefault();
   }
+
+
 
   onConfigClick(event) {
     this.configClick = true;

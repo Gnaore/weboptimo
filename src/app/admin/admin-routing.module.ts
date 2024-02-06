@@ -10,11 +10,14 @@ import { RechercheAvanceeComponent } from './recherche-avancee/recherche-avancee
 import { QrBordereauComponent } from './qr-bordereau/qr-bordereau.component';
 import { DossierImpressionComponent } from './dossier-impression/dossier-impression.component';
 import { ListeAcquisitionComponent } from './liste-acquisition/liste-acquisition.component';
+import { 
+  AuthGuardService as AuthGuard 
+} from '../guard/auth.guard.service';
 
 const routes: Routes = [
   { 
     path: '', component: AdminMainComponent, children: [
-      { path: '', redirectTo: 'emplacements', pathMatch: 'full' },
+      { path: '', redirectTo: 'emplacements', pathMatch: 'full' } ,
       { path: 'tableau-de-bord', component: TableauDeBordComponent },
       { path: 'importation', component: ImportationComponent },
       { path: 'emplacements', component: EmplacementComponent },
@@ -24,7 +27,7 @@ const routes: Routes = [
       { path: 'bordereau', component: QrBordereauComponent },
       { path: 'dossier-impression', component: DossierImpressionComponent },
       { path: 'liste-acquisition', component: ListeAcquisitionComponent },
-    ]
+    ], canActivate: [AuthGuard]
   }
 ];
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminMainComponent } from '../admin-main/admin-main.component';
 import { MenuItem } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-topbar',
@@ -52,7 +53,8 @@ import { MenuItem } from 'primeng/api';
                             </a>
                         </li>
                         <li role="menuitem">
-                            <a routerLink="/auth" (click)="adminMain.onTopbarSubItemClick($event)">
+                            <!--a (click)="adminMain.onTopbarSubItemClick($event)"-->
+                            <a (click)="deconnexion()"  >
                                 <i class="pi pi-sign-out"></i>
                                 <span>Déconnexion</span>
                             </a>
@@ -171,7 +173,7 @@ import { MenuItem } from 'primeng/api';
 export class AppTopbarComponent implements OnInit {
     
     items: MenuItem[] | undefined;
-    constructor(public adminMain: AdminMainComponent) { }
+    constructor(public adminMain: AdminMainComponent, private router: Router) { }
 
     ngOnInit(): void {
         this.items = [
@@ -298,4 +300,9 @@ export class AppTopbarComponent implements OnInit {
             }
         ];
     }
+
+    deconnexion() {
+        localStorage.clear()
+        this.router.navigate(['/auth'])
+      }
 }

@@ -4,7 +4,7 @@ import { ConnexionComponent } from './connexion/connexion.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'connexion', pathMatch: 'full' },
-  { path: 'connexion', component: ConnexionComponent },
+  { path: 'connexion', component: ConnexionComponent }
 ];
 
 @NgModule({

@@ -1,9 +1,9 @@
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HashLocationStrategy, LocationStrategy} from '@angular/common';
+import {CommonModule, HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {AppRoutingModule} from './app-routing.module';
 
 // PrimeNG Components for demos
@@ -137,6 +137,7 @@ import {MenuService} from './admin/composants/app.menu.service';
     imports: [
         BrowserModule,
         FormsModule,
+        ReactiveFormsModule,
         AppRoutingModule,
         HttpClientModule,
         BrowserAnimationsModule,
@@ -146,7 +147,6 @@ import {MenuService} from './admin/composants/app.menu.service';
         AvatarGroupModule,
         BadgeModule,
         BreadcrumbModule,
-        ButtonModule,
         CalendarModule,
         CardModule,
         CarouselModule,
@@ -179,7 +179,6 @@ import {MenuService} from './admin/composants/app.menu.service';
         MegaMenuModule,
         MenuModule,
         MenubarModule,
-        MessageModule,
         MessagesModule,
         MultiSelectModule,
         OrderListModule,
@@ -190,7 +189,6 @@ import {MenuService} from './admin/composants/app.menu.service';
         PanelMenuModule,
         PasswordModule,
         PickListModule,
-        ProgressBarModule,
         RadioButtonModule,
         RatingModule,
         RippleModule,
@@ -218,7 +216,12 @@ import {MenuService} from './admin/composants/app.menu.service';
         TreeModule,
         TreeTableModule,
         VirtualScrollerModule,
-        AppCodeModule
+        AppCodeModule,
+        CommonModule,
+        InputTextModule,
+        ButtonModule,
+        MessageModule,
+        ProgressBarModule
     ],
     declarations: [
         AppComponent,

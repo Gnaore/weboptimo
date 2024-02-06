@@ -1,47 +1,67 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { jwtDecode } from 'jwt-decode';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { ConfigService } from './config.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private loggedUserSubject!: BehaviorSubject<object>;
-  public accessToken!: Observable<object>;
-  private http = inject(HttpClient);
-  private configService = inject(ConfigService);
-  getLoggedUser: Object;
+  isAuthenticated: boolean = false;
+  urlG: string;
+  private concurentUserSubject: BehaviorSubject<object>;
+  public currentUser: Observable<object>;
 
-  constructor() {
-    this.getLoggedUser = JSON.parse(sessionStorage.getItem('token')!);
-    this.loggedUserSubject = new BehaviorSubject(this.getLoggedUser);
-    this.accessToken = this.loggedUserSubject.asObservable();
+  constructor(
+    private configService: ConfigService,
+    private httpClient: HttpClient,
+    private router: Router ) {
+    this.urlG = this.configService.urlG;
+    this.concurentUserSubject = new BehaviorSubject<object>(
+      JSON.parse(localStorage.getItem('currentUser')!)
+    );
+    this.currentUser = this.concurentUserSubject.asObservable();
   }
 
-  loginUser(credentials: FormData): Observable<any> {
-    return this.http.post<any>(`${this.configService.urlG}/auth/login.php`, credentials)
-      .pipe(map(response => {
-        sessionStorage.setItem('token', JSON.stringify(response.data));
-        this.loggedUserSubject.next(response);
-        return response;
-      }));
+  public get currentUserValue(): object {
+    return this.concurentUserSubject.value;
   }
 
-  logoutUser() {
-    sessionStorage.removeItem('token');
-    this.loggedUserSubject.next(null!);
-    location.reload();
+  login(data: any): Observable<any> {
+   
+    const httpOptions = {
+      headers: new HttpHeaders({
+        accept: 'text/plain',
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    return this.httpClient.post<any>(this.urlG + '/login', data, httpOptions).pipe(
+      map((user) => {
+      
+          if (user && user.accessToken) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            this.concurentUserSubject.next(user);
+            this.isAuthenticated = true;
+          } else {
+            this.isAuthenticated = false;
+          }
+
+          return user;
+        })
+      );
   }
 
-  get currentUser(): any | null {
-    let token = sessionStorage.getItem('token');
-    if (!token) return null;
-    return jwtDecode(token);
+
+  logout() {
+    // Logique pour se déconnecter, comme effacer le jeton d'authentification et rediriger l'utilisateur vers la page de connexion
+    localStorage.removeItem('currentUser');
+    this.concurentUserSubject.next({});
+    this.router.navigate(['/auth'])
+   // window.location.href = '/auth';
+    this.isAuthenticated = false;
   }
 
-  public get accessTokenValue() {
-    return this.loggedUserSubject.value;
-  }
 }

@@ -4,5 +4,5 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ConfigService {
-  urlG: string = 'http://localhost/api_smart_stock';
+  urlG: string = 'https://optimo.fintechgodwin.com/api';
 }
