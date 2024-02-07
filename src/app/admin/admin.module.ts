@@ -10,7 +10,7 @@ import { TableauDeBordComponent } from './tableau-de-bord/tableau-de-bord.compon
 import { AppSidebartabcontentComponent } from './composants/app.sidebartabcontent.component';
 import { AppMenuComponent } from './composants/app.menu.component';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppSideBarComponent } from './composants/app.sidebar.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenubarModule } from 'primeng/menubar';
@@ -98,6 +98,7 @@ import { ListeAcquisitionComponent } from './liste-acquisition/liste-acquisition
     PasswordModule,
     DialogModule,
     InputNumberModule,
+    ReactiveFormsModule,
     InputTextareaModule
   ]
 })

@@ -171,7 +171,7 @@ import { Router } from '@angular/router';
     `
 })
 export class AppTopbarComponent implements OnInit {
-    
+
     items: MenuItem[] | undefined;
     constructor(public adminMain: AdminMainComponent, private router: Router) { }
 
@@ -304,5 +304,5 @@ export class AppTopbarComponent implements OnInit {
     deconnexion() {
         localStorage.clear()
         this.router.navigate(['/auth'])
-      }
+    }
 }
