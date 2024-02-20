@@ -147,7 +147,7 @@ export class AdminMainComponent implements OnInit {
           {
             label: 'Gestion des acquisitions',
             command: () => {
-              this.showModalFournisseur = true;
+              // this.showModalFournisseur = true;
             }
           },
           {

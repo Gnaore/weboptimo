@@ -141,85 +141,71 @@
 <!-- Modal d'ajout d'une zone -->
 <p-dialog header="Nouvelle Zone" [(visible)]="showModalZone" [modal]="true" [style]="{ width: '35vw' }"
     [draggable]="false" [resizable]="false">
-    <div class="field">
-        <label>Code</label>
-        <input type="text" pInputText class="block w-full" />
-    </div>
-    <div class="field">
-        <label>Libellé</label>
-        <input type="text" pInputText class="block w-full" />
-    </div>
-    <div class="text-center mt-2">
-        <p-button type="button" icon="pi pi-times" label="Annuler" styleClass="p-button-text p-button-danger"
-            class="mr-2"></p-button>
-        <p-button type="button" icon="pi pi-save" label="Enregistrer"></p-button>
-    </div>
+    <form [formGroup]="zoneForm" (ngSubmit)="enregistrerZone()">
+        <div class="field">
+            <label>Code zone</label>
+            <input formControlName="code" type="text" pInputText class="block w-full" />
+        </div>
+        <div class="field">
+            <label>Libelle zone</label>
+            <input formControlName="libelle" type="text" pInputText class="block w-full" />
+        </div>
+        <div class="text-center mt-2">
+            <p-button type="button" icon="pi pi-times" label="Annuler" styleClass="p-button-text p-button-danger"
+                class="mr-2"></p-button>
+            <p-button type="submit" icon="pi pi-save" [loading]="chargement" [disabled]="zoneForm.invalid || chargement" label="Enregistrer"></p-button>
+        </div>
+    </form>
 </p-dialog>
 
 <!-- Modal d'ajout d'un site -->
 <p-dialog header="Nouveau Site" [(visible)]="showModalSite" [modal]="true" [style]="{ width: '35vw' }"
     [draggable]="false" [resizable]="false">
-    <div class="field">
-        <label>Code</label>
-        <input type="text" pInputText class="block w-full" />
-    </div>
-    <div class="field">
-        <label>Zone</label>
-        <p-dropdown styleClass="w-full d-block" [options]="[]" [(ngModel)]="selectedZone" optionLabel="name"
-            [filter]="true" filterBy="name" [showClear]="true" placeholder="Choisir la zone">
-            <ng-template pTemplate="selectedItem">
-                <div class="flex align-items-center gap-2" *ngIf="selectedZone">
-                    <div>{{ selectedZone.name }}</div>
-                </div>
-            </ng-template>
-            <ng-template let-zone pTemplate="item">
-                <div class="flex align-items-center gap-2">
-                    <div>{{ zone.name }}</div>
-                </div>
-            </ng-template>
-        </p-dropdown>
-    </div>
-    <div class="field">
-        <label>Libellé</label>
-        <input type="text" pInputText class="block w-full" />
-    </div>
-    <div class="text-center mt-2">
-        <p-button type="button" icon="pi pi-times" label="Annuler" styleClass="p-button-text p-button-danger"
-            class="mr-2"></p-button>
-        <p-button type="button" icon="pi pi-save" label="Enregistrer"></p-button>
-    </div>
+    <form [formGroup]="siteForm" (ngSubmit)="enregistrerSite()">
+        <div class="field">
+            <label>Zone</label>
+            <p-dropdown styleClass="w-full" (onChange)="genererCodeSite()" [ngModelOptions]="{standalone: true}" [options]="zones" [(ngModel)]="selectedZone" optionLabel="libelle" [filter]="true"
+                [showClear]="true" placeholder="Choisir la zone"></p-dropdown>
+        </div>
+        <div class="field">
+            <label>Code</label>
+            <input type="text" disabled formControlName="code" pInputText class="block w-full" />
+        </div>
+        <div class="field">
+            <label>Libelle du site</label>
+            <input type="text" pInputText formControlName="libelle" class="block w-full" />
+        </div>
+        <div class="text-center mt-2">
+            <p-button type="button" icon="pi pi-times" label="Annuler" styleClass="p-button-text p-button-danger"
+                class="mr-2"></p-button>
+            <p-button type="submit" [loading]="chargement" [disabled]="siteForm.invalid || chargement" icon="pi pi-save" label="Enregistrer"></p-button>
+        </div>
+    </form>
 </p-dialog>
 
 <!-- Modal d'ajout d'une localisation -->
 <p-dialog header="Nouvelle Localisation" [(visible)]="showModalLocalisation" [modal]="true" [style]="{ width: '35vw' }"
     [draggable]="false" [resizable]="false">
-    <div class="field">
-        <label>Code</label>
-        <input type="text" pInputText class="block w-full" />
-    </div>
-    <div class="field">
-        <label>Site</label>
-        <p-dropdown styleClass="w-full d-block" [options]="[]" [(ngModel)]="selectedSite" optionLabel="name"
-            [filter]="true" filterBy="name" [showClear]="true" placeholder="Choisir le site">
-            <ng-template pTemplate="selectedItem">
-                <div class="flex align-items-center gap-2" *ngIf="selectedSite">
-                    <div>{{ selectedSite.name }}</div>
-                </div>
-            </ng-template>
-            <ng-template let-site pTemplate="item">
-                <div class="flex align-items-center gap-2">
-                    <div>{{ site.name }}</div>
-                </div>
-            </ng-template>
-        </p-dropdown>
-    </div>
-    <div class="field">
-        <label>Libellé</label>
-        <input type="text" pInputText class="block w-full" />
-    </div>
-    <div class="text-center mt-2">
-        <p-button type="button" icon="pi pi-times" label="Annuler" styleClass="p-button-text p-button-danger"
-            class="mr-2"></p-button>
-        <p-button type="button" icon="pi pi-save" label="Enregistrer"></p-button>
-    </div>
+    <form [formGroup]="localisationForm" (ngSubmit)="enregistrerLocalisation()">
+        <div class="field">
+            <label>Site</label>
+            <p-dropdown styleClass="w-full" (onChange)="genererCodeLocalisation()" [options]="sites" [ngModelOptions]="{ standalone: true }"
+                [(ngModel)]="selectedSite" optionLabel="libelle" [filter]="true" [showClear]="true"
+                placeholder="Choisir le site"></p-dropdown>
+        </div>
+        <div class="field">
+            <label>Code</label>
+            <input type="text" disabled formControlName="code" pInputText class="block w-full" />
+        </div>
+        <div class="field">
+            <label>Libelle</label>
+            <input type="text" formControlName="libelle" pInputText class="block w-full" />
+        </div>
+        <div class="text-center mt-2">
+            <p-button type="button" icon="pi pi-times" label="Annuler" styleClass="p-button-text p-button-danger"
+                class="mr-2"></p-button>
+            <p-button type="submit" [loading]="chargement" [disabled]="localisationForm.invalid || chargement"
+                icon="pi pi-save" label="Enregistrer"></p-button>
+        </div>
+    </form>
 </p-dialog>
