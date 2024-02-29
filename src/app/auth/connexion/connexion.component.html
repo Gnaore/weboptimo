@@ -1,7 +1,7 @@
 <h1 class="fixed m-3 text-green-300 flip animation-duration-1000">Opt'Immo</h1>
 <div class="login-body">
     <div class="login-panel p-fluid fadein animation-duration-1000">
-        <form  [formGroup]="authForm" class="grid grid-nogutter" (ngSubmit)="login(authForm.value)">
+        <form [formGroup]="authForm" class="grid grid-nogutter" (ngSubmit)="login()">
             <div class="col-12 login-header">
                 <h1>Authentification</h1>
                 <h2>Bienvenue sur Opt'Immo</h2>
@@ -19,14 +19,14 @@
                     <label>Mot de passe</label>
                 </span>
             </div>
-            <div class="col-12">
+            <div class="col-12" *ngIf="isLoading">
                 <p-progressBar mode="indeterminate" [style]="{ height: '6px' }"></p-progressBar>
             </div>
-            <div class="col-12">
-                <p-message class="scalein animation-duration-300" severity="error" text="Nom d'utilisateur ou mot de passe invalide. Veuillez réessayer svp !"></p-message>
+            <div class="col-12" *ngIf="isError">
+                <p-message class="scalein animation-duration-300" severity="error" text="Echec de l'authentification. Nom d'utilisateur ou mot de passe invalide. Veuillez réessayer svp !"></p-message>
             </div>
             <div class="col-12 button-container">
-                <button pButton type="submit" label="VALIDER" ></button>
+                <button pButton label="VALIDER"></button>
             </div>
         </form>
     </div>

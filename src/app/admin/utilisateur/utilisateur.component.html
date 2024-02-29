@@ -1,7 +1,7 @@
 <div>
     <p-button (onClick)="showModalEdit = true" type="button" icon="pi pi-plus" label="Nouvel utilisateur" styleClass="p-button-text mb-3"></p-button>
     <p-table styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm" [resizableColumns]="true"
-        [value]="[].constructor(5)" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+        [value]="utilisateurs" [loading]="chargement" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
         currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} enregistrements"
         [rowsPerPageOptions]="[5, 10, 20]">
         <ng-template pTemplate="header">
@@ -25,10 +25,10 @@
                 <th (click)="showModalAccess = true">Actions</th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-customer>
+        <ng-template pTemplate="body" let-user>
             <tr>
-                <td></td>
-                <td></td>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.roles[0].name }}</td>
                 <td>
                     <p-button (onClick)="showModalAccess = true" type="button" icon="pi pi-lock" label="Droits & permissions" styleClass="p-button-text mb-3"></p-button>
                 </td>
@@ -38,7 +38,7 @@
 </div>
 
 <!-- Modal d'édition d'un utilisateur -->
-<p-dialog header="Edition d'un groupe" [(visible)]="showModalEdit" [modal]="true" [style]="{ width: '35vw' }"
+<p-dialog header="Edition d'un utilisateur" [(visible)]="showModalEdit" [modal]="true" [style]="{ width: '35vw' }"
     [draggable]="false" [resizable]="false">
     <div class="field">
         <label>Groupe</label>
@@ -71,17 +71,17 @@
         <p-button type="button" icon="pi pi-times" label="Tout déselectionner" styleClass="p-button-text mb-3"></p-button>
     </div> -->
     <p-table styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm"
-        [value]="value" [scrollable]="true" scrollHeight="300px" [showCurrentPageReport]="true">
+        [value]="permissions" [scrollable]="true" scrollHeight="300px" [showCurrentPageReport]="true">
         <ng-template pTemplate="header">
             <tr>
                 <th class="bg-primary">Description</th>
                 <th class="bg-primary">Autorisé</th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-data>
+        <ng-template pTemplate="body" let-permission>
             <tr>
                 <td>
-                    <label for="checkbox">{{ data.desc }}</label>
+                    <label for="checkbox">{{ permission.name }}</label>
                 </td>
                 <td [width]="50" class="text-center">
                     <input type="checkbox" id="checkbox">

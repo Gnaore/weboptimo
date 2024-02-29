@@ -1,43 +1,51 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-connexion',
-  templateUrl: './connexion.component.html',
-  styleUrls: ['./connexion.component.scss']
+	selector: 'app-connexion',
+	templateUrl: './connexion.component.html',
+	styleUrls: ['./connexion.component.scss']
 })
 export class ConnexionComponent implements OnInit {
-  
-  private authFormBuilder = inject(FormBuilder)
-  authForm: FormGroup
-  
-  constructor(private authService: AuthService,private router: Router){
-    this.authForm = this.authFormBuilder.group({
-      email: ['', [Validators.email, Validators.required]],
-      password: ['', [Validators.required]]
-    })
-    
-  }
+	private authFormBuilder = inject(FormBuilder);
+	private authService = inject(AuthService);
+	authForm: FormGroup;
+	isLoading: boolean = false;
+	isError: boolean = false;
 
-  ngOnInit() {
-  }
+	ngOnInit() {
+		this.formInit();
+	}
 
+	formInit() {
+		this.authForm = this.authFormBuilder.group({
+			email: ['', [Validators.email, Validators.required]],
+			password: ['', [Validators.required]]
+		});
+	}
 
-  login(data: any) {
-    const body = {
-      "email": data.email,
-      "password": data.password
-    }
-    this.authService.login(body).subscribe(ret=>{
-      if(ret.accessToken){
-        this.router.navigate(['/admin']);
-      }
-
-    }, (err)=>{
-      localStorage.clear();
-    });
-  }
-
+	login() {
+		this.isError = false;
+		this.isLoading = true;
+		const credentials: { email: string, password: string } = {
+			"email": this.authForm.value.email,
+			"password": this.authForm.value.password
+		}
+		this.authService.login(credentials).subscribe(
+			{
+				next: (ret) => {
+					this.isLoading = false;
+					if (ret.accessToken) {
+						location.href = '#/admin';
+					}
+				},
+				error: (err) => {
+					this.isLoading = false;
+					this.isError = true;
+					localStorage.clear();
+				}
+			}
+		);
+	}
 }
