@@ -96,11 +96,13 @@ export class EmplacementComponent implements OnInit {
           this.zones = response;
         },
         error: response => {
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          if (response.error['message']) {
+            this.Toast.fire({
+              timer: 10000,
+              icon: "error",
+              title: response.error['message']
+            });
+          }
         }
       }
     )
@@ -113,11 +115,13 @@ export class EmplacementComponent implements OnInit {
           this.localisations = response;
         },
         error: response => {
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          if (response.error['message']) {
+            this.Toast.fire({
+              timer: 10000,
+              icon: "error",
+              title: response.error['message']
+            });
+          }
         }
       }
     )
@@ -130,11 +134,13 @@ export class EmplacementComponent implements OnInit {
           this.sites = response;
         },
         error: response => {
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          if (response.error['message']) {
+            this.Toast.fire({
+              timer: 10000,
+              icon: "error",
+              title: response.error['message']
+            });
+          }
         }
       }
     )
@@ -162,7 +168,7 @@ export class EmplacementComponent implements OnInit {
     this.chargement = true;
     const body: ILocalisation = {
       id: this.localisationForm.value.id,
-      code: this.localisationForm.value.code,
+      code: this.localisationForm.get('code').value,
       libelle: this.localisationForm.value.libelle,
       site_id: this.selectedSite.id
     }
@@ -178,11 +184,16 @@ export class EmplacementComponent implements OnInit {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          const fields = ['id', 'code', 'libelle', 'site_id', 'message'];
+          fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     );
@@ -192,7 +203,7 @@ export class EmplacementComponent implements OnInit {
     this.chargement = true;
     const body: ISite = {
       id: this.siteForm.value.id,
-      code: this.siteForm.value.code,
+      code: this.siteForm.get('code').value,
       libelle: this.siteForm.value.libelle,
       zone_id: this.selectedZone.id
     }
@@ -209,11 +220,16 @@ export class EmplacementComponent implements OnInit {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          const fields = ['id', 'code', 'libelle', 'zone_id', 'message'];
+          fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     );
@@ -238,11 +254,16 @@ export class EmplacementComponent implements OnInit {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          const fields = ['id', 'code', 'libelle', 'message'];
+          fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     );

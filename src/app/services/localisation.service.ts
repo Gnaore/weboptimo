@@ -12,7 +12,7 @@ export class LocalisationService {
   private url = inject(ConfigService).urlG;
   private http = inject(HttpClient);
 
-  create(localisation: Partial<ILocalisation>): Observable<IResponse> {
+  create(localisation: Partial<ILocalisation> | { array: Partial<ILocalisation>[] }): Observable<IResponse> {
     return this.http.post<IResponse>(`${this.url}/localisations`, localisation);
   }
 

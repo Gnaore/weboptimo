@@ -12,7 +12,7 @@ export class BordereauService {
   private url = inject(ConfigService).urlG;
   private http = inject(HttpClient);
 
-  create(bordereau: Partial<IBordereau>): Observable<IResponse> {
+  create(bordereau: Partial<IBordereau> | { array: Partial<IBordereau>[] }): Observable<IResponse> {
     return this.http.post<IResponse>(`${this.url}/bordereaux`, bordereau);
   }
 

@@ -22,6 +22,7 @@ export class LocalisationComponent {
   sites: ISite[] = [];
   chargement: boolean = false;
   chargementSuppr: boolean = false;
+  fields = ["code", "id", "libelle", "site_id", "message"];
 
   Toast = Swal.mixin({
     toast: true,
@@ -61,11 +62,15 @@ export class LocalisationComponent {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )
@@ -81,11 +86,15 @@ export class LocalisationComponent {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )
@@ -105,7 +114,7 @@ export class LocalisationComponent {
     this.chargement = true;
     const body: ILocalisation = {
       id: this.localisationForm.value.id,
-      code: this.localisationForm.value.code,
+      code: this.localisationForm.get('code').value,
       libelle: this.localisationForm.value.libelle,
       site_id: this.selectedSite.id
     }
@@ -123,11 +132,15 @@ export class LocalisationComponent {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -146,11 +159,15 @@ export class LocalisationComponent {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -180,11 +197,15 @@ export class LocalisationComponent {
         },
         error: response => {
           this.chargementSuppr = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )

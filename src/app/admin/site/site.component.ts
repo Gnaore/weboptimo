@@ -22,6 +22,7 @@ export class SiteComponent {
   sites: ISite[] = [];
   chargement: boolean = false;
   chargementSuppr: boolean = false;
+  fields = ["code", "id", "libelle", "zone_id", "message"];
 
   Toast = Swal.mixin({
     toast: true,
@@ -61,11 +62,15 @@ export class SiteComponent {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )
@@ -81,11 +86,15 @@ export class SiteComponent {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )
@@ -103,10 +112,11 @@ export class SiteComponent {
     this.chargement = true;
     const body: ISite = {
       id: this.siteForm.value.id,
-      code: this.siteForm.value.code,
+      code: this.siteForm.get('code').value,
       libelle: this.siteForm.value.libelle,
       zone_id: this.selectedZone.id
     }
+    
     if (!body.id) {
       this.siteService.create(body).subscribe(
         {
@@ -121,11 +131,15 @@ export class SiteComponent {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -144,11 +158,15 @@ export class SiteComponent {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -178,11 +196,15 @@ export class SiteComponent {
         },
         error: response => {
           this.chargementSuppr = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )
