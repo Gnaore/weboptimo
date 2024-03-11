@@ -8,25 +8,13 @@
             <div class="px-2 overflow-auto flex-grow-1" style="height: 0px;">
                 <h5 class="mt-3">Emplacements</h5>
                 <ul class="treeview">
-                    <li *ngFor="let n of [].constructor(3);" (click)="toggleTreeview($event)">
-                        <span class="treeview-zone">Zone</span>
+                    <li *ngFor="let zone of zones;" (click)="toggleTreeview($event)">
+                        <span class="treeview-zone">{{ zone.libelle }}</span>
                         <ul class="sub-treeview">
-                            <li>
-                                <span class="treeview-site">Site</span>
+                            <li *ngFor="let site of zone.sites;">
+                                <span class="treeview-site">{{ site.libelle }}</span>
                                 <ul class="sub-treeview">
-                                    <li class="treeview-localisation">Localisation</li>
-                                    <li class="treeview-localisation">Localisation</li>
-                                    <li class="treeview-localisation">Localisation</li>
-                                    <li class="treeview-localisation">Localisation</li>
-                                </ul>
-                            </li>
-                            <li>
-                                <span class="treeview-site">Site</span>
-                                <ul class="sub-treeview">
-                                    <li class="treeview-localisation">Localisation</li>
-                                    <li class="treeview-localisation">Localisation</li>
-                                    <li class="treeview-localisation">Localisation</li>
-                                    <li class="treeview-localisation">Localisation</li>
+                                    <li *ngFor="let localisation of [].constructor(10);" class="treeview-localisation">Localisation</li>
                                 </ul>
                             </li>
                         </ul>

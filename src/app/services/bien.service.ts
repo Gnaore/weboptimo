@@ -13,18 +13,18 @@ export class BienService {
   private http = inject(HttpClient);
 
   create(bien: Partial<IBien> | { array: Partial<IBien>[] }): Observable<IResponse> {
-    return this.http.post<IResponse>(`${this.url}/bien`, bien);
+    return this.http.post<IResponse>(`${this.url}/immobilisations`, bien);
   }
 
   update(bien: Partial<IBien>, bid: number): Observable<IResponse> {
-    return this.http.put<IResponse>(`${this.url}/bien/${bid}`, bien);
+    return this.http.put<IResponse>(`${this.url}/immobilisations/${bid}`, bien);
   }
 
   read(): Observable<IBien[]> {
-    return this.http.get<IBien[]>(`${this.url}/bien`);
+    return this.http.get<IBien[]>(`${this.url}/immobilisations`);
   }
 
   delete(bid: number): Observable<IResponse> {
-    return this.http.delete<IResponse>(`${this.url}/bien/${bid}`);
+    return this.http.delete<IResponse>(`${this.url}/immobilisations/${bid}`);
   }
 }

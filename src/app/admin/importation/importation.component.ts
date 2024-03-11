@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import * as moment from 'moment';
 import { BienService } from 'src/app/services/bien.service';
 import { BordereauService } from 'src/app/services/bordereau.service';
 import { LocalisationService } from 'src/app/services/localisation.service';
@@ -374,11 +375,12 @@ export class ImportationComponent implements OnInit {
                   });
                   this.dataToSend.push({
                     reference: data['Référence'],
-                    code_inventaire_id: data['Code Inventaire'].toString(),
-                    localisation_id: data['Code Localisation'].toString(),
+                    code_inventaire: data['Code Inventaire'].toString(),
+                    localisation_code: data['Code Localisation'].toString(),
                     description: data['Description'],
                     etat: data['Etat'],
-                    service: data['Service']
+                    service: data['Service'],
+                    date_enregistrement: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
                   });
                 }
                 break;
