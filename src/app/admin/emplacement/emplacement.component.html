@@ -6,15 +6,15 @@
         <div class="col-2 p-0 flex flex-column">
             <button class="py-1" (click)="closeAllTreeviews()">{{ !hideAllTreeview ? 'Tout réduire -': 'Tout afficher +' }}</button>
             <div class="px-2 overflow-auto flex-grow-1" style="height: 0px;">
-                <h5 class="mt-3">Emplacements</h5>
+                <h5 class="mt-3">Emplacementsy</h5>
                 <ul class="treeview">
                     <li *ngFor="let zone of zones;" (click)="toggleTreeview($event)">
                         <span class="treeview-zone">{{ zone.libelle }}</span>
                         <ul class="sub-treeview">
-                            <li *ngFor="let site of zone.sites;">
+                            <li *ngFor="let site of zone.sites;" (click)="filtreBien('site', site.id)">
                                 <span class="treeview-site">{{ site.libelle }}</span>
                                 <ul class="sub-treeview">
-                                    <li *ngFor="let localisation of [].constructor(10);" class="treeview-localisation">Localisation</li>
+                                    <li *ngFor="let localisation of listeLocalisationParSite(site.id);" (click)="filtreBien('localisation', localisation.id)" class="treeview-localisation">{{ localisation.libelle }}</li>
                                 </ul>
                             </li>
                         </ul>
@@ -41,79 +41,75 @@
                 </div>
             </div>
             <div>
-                <p-table styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm" [resizableColumns]="true" [value]="[].constructor(5)"
+                <p-table styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm" [resizableColumns]="true" [value]="biensFiltres"
                     [paginator]="true" [rows]="5" [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
                     currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} enregistrements"
                     [rowsPerPageOptions]="[5, 10, 20]">
                     <ng-template pTemplate="header">
                         <tr>
-                            <th pSortableColumn="code">
+                            <th pSortableColumn="localisation.code">
                                 <div class="flex align-items-center">
                                     Code Localisation
-                                    <p-sortIcon field="col.field"></p-sortIcon>
-                                    <p-columnFilter type="text" field="name" display="menu" matchMode="in"
+                                    <p-sortIcon field="localisation.code"></p-sortIcon>
+                                    <p-columnFilter type="text" field="localisation.code" display="menu" matchMode="contains"
                                         [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                                         [showClearButton]="false"></p-columnFilter>
                                 </div>
                             </th>
-                            <th pSortableColumn="code">
+                            <th pSortableColumn="localisation.libelle">
                                 <div class="flex align-items-center">
                                     Localisation
-                                    <p-sortIcon field="col.field"></p-sortIcon>
-                                    <p-columnFilter type="text" field="name" display="menu" matchMode="in"
+                                    <p-sortIcon field="localisation.libelle"></p-sortIcon>
+                                    <p-columnFilter type="text" field="localisation.libelle" display="menu" matchMode="contains"
                                         [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                                         [showClearButton]="false"></p-columnFilter>
                                 </div>
                             </th>
-                            <th pSortableColumn="code">
+                            <th pSortableColumn="code_inventaire.code">
                                 <div class="flex align-items-center">
                                     Code Inventaire
-                                    <p-sortIcon field="col.field"></p-sortIcon>
-                                    <p-columnFilter type="text" field="name" display="menu" matchMode="in"
+                                    <p-sortIcon field="code_inventaire.code"></p-sortIcon>
+                                    <p-columnFilter type="text" field="code_inventaire.code" display="menu" matchMode="contains"
                                         [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                                         [showClearButton]="false"></p-columnFilter>
                                 </div>
                             </th>
-                            <th pSortableColumn="code">
+                            <th pSortableColumn="libelle">
                                 <div class="flex align-items-center">
                                     Libellé du bien
-                                    <p-sortIcon field="col.field"></p-sortIcon>
-                                    <p-columnFilter type="text" field="name" display="menu" matchMode="in"
+                                    <p-sortIcon field="libelle"></p-sortIcon>
+                                    <p-columnFilter type="text" field="libelle" display="menu" matchMode="contains"
                                         [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                                         [showClearButton]="false"></p-columnFilter>
                                 </div>
                             </th>
-                            <th pSortableColumn="code">
+                            <th pSortableColumn="reference">
                                 Référence
-                                <p-sortIcon field="col.field"></p-sortIcon>
+                                <p-sortIcon field="reference"></p-sortIcon>
                             </th>
-                            <th pSortableColumn="code">
+                            <th pSortableColumn="service">
                                 Service
-                                <p-sortIcon field="col.field"></p-sortIcon>
+                                <p-sortIcon field="service"></p-sortIcon>
                             </th>
-                            <th pSortableColumn="code">
+                            <th pSortableColumn="etat">
                                 Etat
-                                <p-sortIcon field="col.field"></p-sortIcon>
+                                <p-sortIcon field="etat"></p-sortIcon>
                             </th>
-                            <th pSortableColumn="code">
+                            <!-- <th pSortableColumn="code">
                                 Rebut
                                 <p-sortIcon field="col.field"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="code">
-                                Code zone
-                                <p-sortIcon field="col.field"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="code">
-                                Code site
-                                <p-sortIcon field="col.field"></p-sortIcon>
-                            </th>
+                            </th> -->
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-customer>
+                    <ng-template pTemplate="body" let-bien>
                         <tr>
-                            <td>
-                                {{customer[col.field]}}
-                            </td>
+                            <td>{{ bien.localisation.code }}</td>
+                            <td>{{ bien.localisation.libelle }}</td>
+                            <td>{{ bien.code_inventaire.code }}</td>
+                            <td>{{ bien.libelle }}</td>
+                            <td>{{ bien.reference }}</td>
+                            <td>{{ bien.service }}</td>
+                            <td>{{ bien.etat }}</td>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="paginatorright">

@@ -41,7 +41,7 @@
             <tr>
                 <td>{{ bordereau.code }}</td>
                 <td>{{ bordereau.libelle }}</td>
-                <td>{{ getSiteLabel(bordereau.site_code!) }}</td>
+                <td>{{ getSiteLabel(bordereau.site_code!)! }}</td>
                 <td>
                     <p-button [disabled]="chargementSuppr" (onClick)="supprimerBordereau(bordereau.id)" type="button"
                         icon="pi pi-trash" [loading]="chargementSuppr"

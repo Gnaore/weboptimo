@@ -9,6 +9,8 @@ import Swal from 'sweetalert2';
 import { SiteService } from 'src/app/services/site.service';
 import { LocalisationService } from 'src/app/services/localisation.service';
 import { ILocalisation } from 'src/app/interfaces/localisation';
+import { IBien } from 'src/app/interfaces/bien';
+import { BienService } from 'src/app/services/bien.service';
 
 @Component({
   selector: 'app-emplacement',
@@ -17,7 +19,6 @@ import { ILocalisation } from 'src/app/interfaces/localisation';
 })
 export class EmplacementComponent implements OnInit {
   files: TreeNode[];
-  selectedColumns: Columns[] | undefined;
   selectedZone: IZone;
   selectedSite: ISite;
   showModalZone: boolean = false;
@@ -36,6 +37,9 @@ export class EmplacementComponent implements OnInit {
   localisations: ILocalisation[] = [];
   chargement: boolean = false;
   chargementSuppr: boolean = false;
+  bienService = inject(BienService);
+  biens: IBien[] = [];
+  biensFiltres: IBien[] = [];
 
   Toast = Swal.mixin({
     toast: true,
@@ -53,18 +57,47 @@ export class EmplacementComponent implements OnInit {
     this.formInit();
     this.listeZone();
     this.listeSite();
+    this.listeBien();
     this.listeLocalisation();
-    this.selectedColumns = [
-      { field: 'codeLocalisation', header: 'Code localisation' },
-      { field: 'codeInventaire', header: 'Code inventaire' },
-      { field: 'ref', header: 'Référence' },
-      { field: 'description', header: 'Description' },
-      { field: 'etat', header: 'Etat' },
-      { field: 'service', header: 'Service' },
-      { field: 'miseAuRebu', header: 'Mise au rebu' },
-      { field: 'note', header: 'Note' },
-      { field: 'estSupprime', header: 'Est supprimé' }
-    ];
+  }
+
+  listeBien() {
+    this.chargement = true;
+    this.bienService.read().subscribe(
+      {
+        next: response => {
+          this.chargement = false;
+          this.biens = response;
+        },
+        error: response => {
+          this.chargement = false;
+          this.Toast.fire({
+            timer: 10000,
+            icon: "error",
+            title: response.error.message
+          });
+        }
+      }
+    )
+  }
+
+  filtreBien(by: 'site' | 'zone' | 'localisation', id: number) {
+    console.log("affichage par : " + by + " avec id : " + id);
+    
+    switch (by) {
+      case 'site':
+        this.biensFiltres = this.biens.filter(bien => bien.localisation.site_id === id);
+        break;
+      case 'localisation':
+        this.biensFiltres = this.biens.filter(bien => bien.localisation.id === id);
+        break;
+      case 'zone':
+        this.biensFiltres = this.biens.filter(bien => bien.localisation_id === id);
+        break;
+      default:
+        this.biensFiltres = [];
+        break;
+    }
   }
 
   formInit() {
@@ -127,6 +160,10 @@ export class EmplacementComponent implements OnInit {
     )
   }
 
+  listeLocalisationParSite(idSite: number): ILocalisation[] {
+    return this.localisations.filter((item) => item.site_id === idSite);
+  }
+
   listeSite() {
     this.siteService.read().subscribe(
       {
@@ -151,7 +188,7 @@ export class EmplacementComponent implements OnInit {
     if (nbrSiteParZone > 9)
       this.siteForm.get('code').setValue(this.selectedZone.code + '' + nbrSiteParZone)
     else
-      this.siteForm.get('code').setValue(this.selectedZone.code + '0' + nbrSiteParZone)  
+      this.siteForm.get('code').setValue(this.selectedZone.code + '0' + nbrSiteParZone)
   }
 
   genererCodeLocalisation() {
@@ -160,7 +197,7 @@ export class EmplacementComponent implements OnInit {
       this.localisationForm.get('code').setValue(this.selectedSite.code + '' + nbrLocParSite)
     else if (nbrLocParSite > 9)
       this.localisationForm.get('code').setValue(this.selectedSite.code + '0' + nbrLocParSite)
-    else  
+    else
       this.localisationForm.get('code').setValue(this.selectedSite.code + '00' + nbrLocParSite)
   }
 
