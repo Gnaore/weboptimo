@@ -40,6 +40,9 @@ export class EmplacementComponent implements OnInit {
   bienService = inject(BienService);
   biens: IBien[] = [];
   biensFiltres: IBien[] = [];
+  idLocalisation: number = 0;
+  idSite: number = 0;
+  idZone: number = 0;
 
   Toast = Swal.mixin({
     toast: true,

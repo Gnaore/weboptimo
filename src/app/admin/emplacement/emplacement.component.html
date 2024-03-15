@@ -6,15 +6,15 @@
         <div class="col-2 p-0 flex flex-column">
             <button class="py-1" (click)="closeAllTreeviews()">{{ !hideAllTreeview ? 'Tout réduire -': 'Tout afficher +' }}</button>
             <div class="px-2 overflow-auto flex-grow-1" style="height: 0px;">
-                <h5 class="mt-3">Emplacementsy</h5>
+                <h5 class="mt-3">Emplacements</h5>
                 <ul class="treeview">
-                    <li *ngFor="let zone of zones;" (click)="toggleTreeview($event)">
+                    <li *ngFor="let zone of zones;" (dblclick)="toggleTreeview($event)">
                         <span class="treeview-zone">{{ zone.libelle }}</span>
                         <ul class="sub-treeview">
-                            <li *ngFor="let site of zone.sites;" (click)="filtreBien('site', site.id)">
-                                <span class="treeview-site">{{ site.libelle }}</span>
+                            <li *ngFor="let site of zone.sites;">
+                                <span class="treeview-site" (click)="filtreBien('site', site.id);">{{ site.libelle }}</span>
                                 <ul class="sub-treeview">
-                                    <li *ngFor="let localisation of listeLocalisationParSite(site.id);" (click)="filtreBien('localisation', localisation.id)" class="treeview-localisation">{{ localisation.libelle }}</li>
+                                    <li [ngClass]="{'active': idLocalisation === localisation.id}" *ngFor="let localisation of listeLocalisationParSite(site.id);" (click)="filtreBien('localisation', localisation.id); idLocalisation = localisation.id" class="treeview-localisation">{{ localisation.libelle }}</li>
                                 </ul>
                             </li>
                         </ul>
