@@ -43,6 +43,7 @@ export class EmplacementComponent implements OnInit {
   idLocalisation: number = 0;
   idSite: number = 0;
   idZone: number = 0;
+  nbrBiens: number = 0;
 
   Toast = Swal.mixin({
     toast: true,
@@ -86,7 +87,7 @@ export class EmplacementComponent implements OnInit {
 
   filtreBien(by: 'site' | 'zone' | 'localisation', id: number) {
     console.log("affichage par : " + by + " avec id : " + id);
-    
+
     switch (by) {
       case 'site':
         this.biensFiltres = this.biens.filter(bien => bien.localisation.site_id === id);
@@ -101,6 +102,7 @@ export class EmplacementComponent implements OnInit {
         this.biensFiltres = [];
         break;
     }
+    this.nbrBiens = this.biensFiltres.length
   }
 
   formInit() {

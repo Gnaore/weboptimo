@@ -41,7 +41,8 @@
                 </div>
             </div>
             <div>
-                <p-table styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm" [resizableColumns]="true" [value]="biensFiltres"
+                <h3>{{ nbrBiens }} Bien(s) identifié(s)</h3>
+                <p-table [loading]="chargement" styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm" [resizableColumns]="true" [value]="biensFiltres"
                     [paginator]="true" [rows]="5" [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
                     currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} enregistrements"
                     [rowsPerPageOptions]="[5, 10, 20]">
@@ -74,11 +75,11 @@
                                         [showClearButton]="false"></p-columnFilter>
                                 </div>
                             </th>
-                            <th pSortableColumn="libelle">
+                            <th pSortableColumn="description">
                                 <div class="flex align-items-center">
                                     Libellé du bien
-                                    <p-sortIcon field="libelle"></p-sortIcon>
-                                    <p-columnFilter type="text" field="libelle" display="menu" matchMode="contains"
+                                    <p-sortIcon field="description"></p-sortIcon>
+                                    <p-columnFilter type="text" field="description" display="menu" matchMode="contains"
                                         [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
                                         [showClearButton]="false"></p-columnFilter>
                                 </div>
@@ -106,7 +107,7 @@
                             <td>{{ bien.localisation.code }}</td>
                             <td>{{ bien.localisation.libelle }}</td>
                             <td>{{ bien.code_inventaire.code }}</td>
-                            <td>{{ bien.libelle }}</td>
+                            <td>{{ bien.description }}</td>
                             <td>{{ bien.reference }}</td>
                             <td>{{ bien.service }}</td>
                             <td>{{ bien.etat }}</td>
