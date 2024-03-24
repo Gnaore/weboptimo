@@ -18,7 +18,6 @@ import { BienService } from 'src/app/services/bien.service';
   styleUrls: ['./emplacement.component.scss']
 })
 export class EmplacementComponent implements OnInit {
-  files: TreeNode[];
   selectedZone: IZone;
   selectedSite: ISite;
   showModalZone: boolean = false;
