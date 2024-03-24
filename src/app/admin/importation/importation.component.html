@@ -15,7 +15,7 @@
                     <p-fileUpload [auto]="true" chooseLabel="Charger le fichier" uploadIcon="pi pi-cog mr-2" uploadLabel="Traitement"
                         [showCancelButton]="false" accept=".xls, .xlsx, .csv" m (onRemove)="selectedColumns = []; selectedTable = []; data = []" (onSelect)="onSelect($event)" [disabled]="selectedColumns.length === 0"></p-fileUpload>
                 </div>
-                <p-button label="Traitement des données" styleClass="mt-3" [disabled]="data.length === 0"></p-button>
+                <p-button label="Traitement des données" [loading]="chargement" (onClick)="submit()" styleClass="mt-3" [disabled]="data.length === 0 || chargement"></p-button>
             </div>
             <div class="col-8 max-h-full">
                 <p-message severity="info" *ngIf="selectedColumns.length === 0" text="Veuillez sélectionner le type de données afin d'afficher le tableau. Merci !"></p-message>

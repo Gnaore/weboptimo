@@ -12,7 +12,7 @@ export class SiteService {
   private url = inject(ConfigService).urlG;
   private http = inject(HttpClient);
 
-  create(site: Partial<ISite>): Observable<IResponse> {
+  create(site: Partial<ISite> | { array: Partial<ISite>[] }): Observable<IResponse> {
     return this.http.post<IResponse>(`${this.url}/sites`, site);
   }
 

@@ -23,6 +23,7 @@ export class GroupeComponent implements OnInit {
   permissions: IPermission[] = [];
   chargement: boolean = false;
   chargementSuppr: boolean = false;
+  fields = ["id", "name", "message"];
 
   Toast = Swal.mixin({
     toast: true,
@@ -59,11 +60,15 @@ export class GroupeComponent implements OnInit {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )
@@ -79,11 +84,15 @@ export class GroupeComponent implements OnInit {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )
@@ -109,11 +118,15 @@ export class GroupeComponent implements OnInit {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -132,11 +145,15 @@ export class GroupeComponent implements OnInit {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -164,11 +181,15 @@ export class GroupeComponent implements OnInit {
         },
         error: response => {
           this.chargementSuppr = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )

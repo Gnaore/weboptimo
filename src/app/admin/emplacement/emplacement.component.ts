@@ -9,6 +9,8 @@ import Swal from 'sweetalert2';
 import { SiteService } from 'src/app/services/site.service';
 import { LocalisationService } from 'src/app/services/localisation.service';
 import { ILocalisation } from 'src/app/interfaces/localisation';
+import { IBien } from 'src/app/interfaces/bien';
+import { BienService } from 'src/app/services/bien.service';
 
 @Component({
   selector: 'app-emplacement',
@@ -16,8 +18,6 @@ import { ILocalisation } from 'src/app/interfaces/localisation';
   styleUrls: ['./emplacement.component.scss']
 })
 export class EmplacementComponent implements OnInit {
-  files: TreeNode[];
-  selectedColumns: Columns[] | undefined;
   selectedZone: IZone;
   selectedSite: ISite;
   showModalZone: boolean = false;
@@ -36,6 +36,13 @@ export class EmplacementComponent implements OnInit {
   localisations: ILocalisation[] = [];
   chargement: boolean = false;
   chargementSuppr: boolean = false;
+  bienService = inject(BienService);
+  biens: IBien[] = [];
+  biensFiltres: IBien[] = [];
+  idLocalisation: number = 0;
+  idSite: number = 0;
+  idZone: number = 0;
+  nbrBiens: number = 0;
 
   Toast = Swal.mixin({
     toast: true,
@@ -53,18 +60,48 @@ export class EmplacementComponent implements OnInit {
     this.formInit();
     this.listeZone();
     this.listeSite();
+    this.listeBien();
     this.listeLocalisation();
-    this.selectedColumns = [
-      { field: 'codeLocalisation', header: 'Code localisation' },
-      { field: 'codeInventaire', header: 'Code inventaire' },
-      { field: 'ref', header: 'Référence' },
-      { field: 'description', header: 'Description' },
-      { field: 'etat', header: 'Etat' },
-      { field: 'service', header: 'Service' },
-      { field: 'miseAuRebu', header: 'Mise au rebu' },
-      { field: 'note', header: 'Note' },
-      { field: 'estSupprime', header: 'Est supprimé' }
-    ];
+  }
+
+  listeBien() {
+    this.chargement = true;
+    this.bienService.read().subscribe(
+      {
+        next: response => {
+          this.chargement = false;
+          this.biens = response;
+        },
+        error: response => {
+          this.chargement = false;
+          this.Toast.fire({
+            timer: 10000,
+            icon: "error",
+            title: response.error.message
+          });
+        }
+      }
+    )
+  }
+
+  filtreBien(by: 'site' | 'zone' | 'localisation', id: number) {
+    console.log("affichage par : " + by + " avec id : " + id);
+
+    switch (by) {
+      case 'site':
+        this.biensFiltres = this.biens.filter(bien => bien.localisation.site_id === id);
+        break;
+      case 'localisation':
+        this.biensFiltres = this.biens.filter(bien => bien.localisation.id === id);
+        break;
+      case 'zone':
+        this.biensFiltres = this.biens.filter(bien => bien.localisation_id === id);
+        break;
+      default:
+        this.biensFiltres = [];
+        break;
+    }
+    this.nbrBiens = this.biensFiltres.length
   }
 
   formInit() {
@@ -96,11 +133,13 @@ export class EmplacementComponent implements OnInit {
           this.zones = response;
         },
         error: response => {
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          if (response.error['message']) {
+            this.Toast.fire({
+              timer: 10000,
+              icon: "error",
+              title: response.error['message']
+            });
+          }
         }
       }
     )
@@ -113,14 +152,20 @@ export class EmplacementComponent implements OnInit {
           this.localisations = response;
         },
         error: response => {
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          if (response.error['message']) {
+            this.Toast.fire({
+              timer: 10000,
+              icon: "error",
+              title: response.error['message']
+            });
+          }
         }
       }
     )
+  }
+
+  listeLocalisationParSite(idSite: number): ILocalisation[] {
+    return this.localisations.filter((item) => item.site_id === idSite);
   }
 
   listeSite() {
@@ -130,11 +175,13 @@ export class EmplacementComponent implements OnInit {
           this.sites = response;
         },
         error: response => {
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          if (response.error['message']) {
+            this.Toast.fire({
+              timer: 10000,
+              icon: "error",
+              title: response.error['message']
+            });
+          }
         }
       }
     )
@@ -145,7 +192,7 @@ export class EmplacementComponent implements OnInit {
     if (nbrSiteParZone > 9)
       this.siteForm.get('code').setValue(this.selectedZone.code + '' + nbrSiteParZone)
     else
-      this.siteForm.get('code').setValue(this.selectedZone.code + '0' + nbrSiteParZone)  
+      this.siteForm.get('code').setValue(this.selectedZone.code + '0' + nbrSiteParZone)
   }
 
   genererCodeLocalisation() {
@@ -154,7 +201,7 @@ export class EmplacementComponent implements OnInit {
       this.localisationForm.get('code').setValue(this.selectedSite.code + '' + nbrLocParSite)
     else if (nbrLocParSite > 9)
       this.localisationForm.get('code').setValue(this.selectedSite.code + '0' + nbrLocParSite)
-    else  
+    else
       this.localisationForm.get('code').setValue(this.selectedSite.code + '00' + nbrLocParSite)
   }
 
@@ -162,7 +209,7 @@ export class EmplacementComponent implements OnInit {
     this.chargement = true;
     const body: ILocalisation = {
       id: this.localisationForm.value.id,
-      code: this.localisationForm.value.code,
+      code: this.localisationForm.get('code').value,
       libelle: this.localisationForm.value.libelle,
       site_id: this.selectedSite.id
     }
@@ -178,11 +225,16 @@ export class EmplacementComponent implements OnInit {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          const fields = ['id', 'code', 'libelle', 'site_id', 'message'];
+          fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     );
@@ -192,7 +244,7 @@ export class EmplacementComponent implements OnInit {
     this.chargement = true;
     const body: ISite = {
       id: this.siteForm.value.id,
-      code: this.siteForm.value.code,
+      code: this.siteForm.get('code').value,
       libelle: this.siteForm.value.libelle,
       zone_id: this.selectedZone.id
     }
@@ -209,11 +261,16 @@ export class EmplacementComponent implements OnInit {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          const fields = ['id', 'code', 'libelle', 'zone_id', 'message'];
+          fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     );
@@ -238,11 +295,16 @@ export class EmplacementComponent implements OnInit {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          const fields = ['id', 'code', 'libelle', 'message'];
+          fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     );

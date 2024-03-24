@@ -19,6 +19,7 @@ export class FournisseurComponent {
   fournisseurs: IFournisseur[] = [];
   chargement: boolean = false;
   chargementSuppr: boolean = false;
+  fields = ["id", "code", "fournisseur", "message"];
 
   Toast = Swal.mixin({
     toast: true,
@@ -62,11 +63,15 @@ export class FournisseurComponent {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )
@@ -100,11 +105,15 @@ export class FournisseurComponent {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -123,11 +132,15 @@ export class FournisseurComponent {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -163,11 +176,15 @@ export class FournisseurComponent {
         },
         error: response => {
           this.chargementSuppr = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )

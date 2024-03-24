@@ -36,13 +36,17 @@
                 <td>{{ localisation.code }}</td>
                 <td>{{ localisation.libelle }}</td>
                 <td>
-                    <p-button [disabled]="chargementSuppr" (onClick)="supprimerLocalisation(localisation.code)"
+                    <p-button [disabled]="chargementSuppr" (onClick)="supprimerLocalisation(localisation.id)"
                         type="button" icon="pi pi-trash" [loading]="chargementSuppr"
                         styleClass="p-button-text p-button-danger"></p-button>
                     <p-button (onClick)="showModalEdit = true; obtenirDonneesLocalisation(localisation)" type="button"
                         icon="pi pi-pencil" styleClass="p-button-text p-button-info"></p-button>
                 </td>
             </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorright">
+            <p-button type="button" icon="pi pi-refresh" label="Actualiser"
+                styleClass="p-button-text" (onClick)="listeLocalisation()"></p-button>
         </ng-template>
     </p-table>
 </div>

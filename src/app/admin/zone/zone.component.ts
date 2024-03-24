@@ -17,6 +17,7 @@ export class ZoneComponent implements OnInit {
   zones: IZone[] = [];
   chargement: boolean = false;
   chargementSuppr: boolean = false;
+  fields = ["code", "id", "libelle", "message"];
 
   Toast = Swal.mixin({
     toast: true,
@@ -56,7 +57,7 @@ export class ZoneComponent implements OnInit {
           this.Toast.fire({
             timer: 10000,
             icon: "error",
-            title: response.message
+            title: response.error.message
           });
         }
       }
@@ -84,11 +85,15 @@ export class ZoneComponent implements OnInit {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -107,11 +112,15 @@ export class ZoneComponent implements OnInit {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -143,7 +152,7 @@ export class ZoneComponent implements OnInit {
           this.Toast.fire({
             timer: 10000,
             icon: "error",
-            title: response.message
+            title: response.error.message
           });
         }
       }

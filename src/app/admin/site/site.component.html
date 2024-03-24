@@ -34,10 +34,14 @@
                 <td>{{ site.code }}</td>
                 <td>{{ site.libelle }}</td>
                 <td>
-                    <p-button [disabled]="chargementSuppr" (onClick)="supprimerSite(site.code)" type="button" icon="pi pi-trash" [loading]="chargementSuppr" styleClass="p-button-text p-button-danger"></p-button>
+                    <p-button [disabled]="chargementSuppr" (onClick)="supprimerSite(site.id)" type="button" icon="pi pi-trash" [loading]="chargementSuppr" styleClass="p-button-text p-button-danger"></p-button>
                     <p-button (onClick)="showModalEdit = true; obtenirDonneesSite(site)" type="button" icon="pi pi-pencil" styleClass="p-button-text p-button-info"></p-button>
                 </td>
             </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorright">
+            <p-button type="button" icon="pi pi-refresh" label="Actualiser"
+                styleClass="p-button-text" (onClick)="listeSite()"></p-button>
         </ng-template>
     </p-table>
 </div>

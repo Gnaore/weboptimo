@@ -12,7 +12,7 @@ export class ZoneService {
   private url = inject(ConfigService).urlG;
   private http = inject(HttpClient);
 
-  create(zone: Partial<IZone>): Observable<IResponse> {
+  create(zone: Partial<IZone> | { array: Partial<IZone>[]}): Observable<IResponse> {
     return this.http.post<IResponse>(`${this.url}/zones`, zone);
   }
 

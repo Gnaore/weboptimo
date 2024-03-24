@@ -22,6 +22,7 @@ export class BordereauComponent {
   sites: ISite[] = [];
   chargement: boolean = false;
   chargementSuppr: boolean = false;
+  fields = ["code", "id", "libelle", "localisation_id", "message"];
 
   Toast = Swal.mixin({
     toast: true,
@@ -61,11 +62,15 @@ export class BordereauComponent {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )
@@ -81,11 +86,15 @@ export class BordereauComponent {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )
@@ -93,8 +102,6 @@ export class BordereauComponent {
 
   genererCode() {
     const year = new Date().getFullYear().toString();
-    console.log(year.substring(year.length - 2));
-    
     const nbrBorParSite = this.bordereaux.filter(bord => bord.site_code === this.selectedSite.code && bord.code.substring(0,1) === year.substring(year.length - 2)).length + 1;
     if (nbrBorParSite > 9)
       this.bordereauForm.get('code').setValue(year.substring(year.length - 2) + this.selectedSite.code + '' + nbrBorParSite)
@@ -106,7 +113,7 @@ export class BordereauComponent {
     this.chargement = true;
     const body: IBordereau = {
       id: this.bordereauForm.value.id,
-      code: this.bordereauForm.value.code,
+      code: this.bordereauForm.get('code').value,
       libelle: this.bordereauForm.value.libelle,
       site_code: this.selectedSite.code
     }
@@ -124,11 +131,15 @@ export class BordereauComponent {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -147,11 +158,15 @@ export class BordereauComponent {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -185,11 +200,15 @@ export class BordereauComponent {
         },
         error: response => {
           this.chargementSuppr = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )

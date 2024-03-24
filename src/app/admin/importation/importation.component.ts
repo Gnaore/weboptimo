@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import * as moment from 'moment';
+import { BienService } from 'src/app/services/bien.service';
+import { BordereauService } from 'src/app/services/bordereau.service';
+import { LocalisationService } from 'src/app/services/localisation.service';
+import { SiteService } from 'src/app/services/site.service';
+import { ZoneService } from 'src/app/services/zone.service';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 
@@ -9,10 +15,18 @@ import * as XLSX from 'xlsx';
 })
 export class ImportationComponent implements OnInit {
 
+  zoneService = inject(ZoneService);
+  siteService = inject(SiteService);
+  localisationService = inject(LocalisationService);
+  bordereauService = inject(BordereauService);
+  bienService = inject(BienService);
   tables: Table[] | undefined;
   selectedTable: Table | undefined;
   selectedColumns: Columns[] = [];
   data: any[] = [];
+  dataToSend: any[] = [];
+  fields: string[] = [];
+  chargement: boolean = false;
 
   Toast = Swal.mixin({
     toast: true,
@@ -27,6 +41,13 @@ export class ImportationComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    if (sessionStorage.getItem('request_status') === '1') {
+      this.Toast.fire({
+        icon: "success",
+        title: "Importation des données terminée avec succès."
+      });
+    }
+    sessionStorage.removeItem('request_status');
     this.tables = [
       { nom: 'Zones', code: 'ZN' },
       { nom: 'Sites', code: 'ST' },
@@ -34,6 +55,146 @@ export class ImportationComponent implements OnInit {
       { nom: 'Bordereaux', code: 'BD' },
       { nom: 'Biens', code: 'BN' }
     ]
+  }
+
+  reset() {
+    location.reload();
+    this.data = [];
+    this.selectedColumns = [];
+    this.selectedTable = null;
+  }
+
+  submit() {
+    this.chargement = true;
+    switch (this.selectedTable.code) {
+      case 'ZN':
+        this.fields = ['code', 'libelle', 'message'];
+        this.zoneService.create({ array: this.dataToSend }).subscribe(
+          {
+            next: response => {
+              this.chargement = false;
+              sessionStorage.setItem('request_status', "1");
+              this.reset();
+            },
+            error: response => {
+              this.chargement = false;
+              this.fields.forEach(field => {
+                if (response.error[field]) {
+                  this.Toast.fire({
+                    timer: 10000,
+                    icon: "error",
+                    title: response.error[field]
+                  });
+                }
+              })
+            }
+          }
+        );
+        break;
+      case 'ST':
+        this.fields = ['code', 'libelle', 'zone_id', 'message'];
+        this.siteService.create({ array: this.dataToSend }).subscribe(
+          {
+            next: response => {
+              this.chargement = false;
+              sessionStorage.setItem('request_status', "1");
+              this.reset();
+            },
+            error: response => {
+              this.chargement = false;
+              this.fields.forEach(field => {
+                if (response.error[field]) {
+                  this.Toast.fire({
+                    timer: 10000,
+                    icon: "error",
+                    title: response.error[field]
+                  });
+                }
+              })
+            }
+          }
+        )
+        break;
+
+      case 'LC':
+        this.fields = ['code', 'libelle', 'site_id', 'message'];
+        this.localisationService.create({ array: this.dataToSend }).subscribe(
+          {
+            next: response => {
+              this.chargement = false;
+              sessionStorage.setItem('request_status', "1");
+              this.reset();
+            },
+            error: response => {
+              this.chargement = false;
+              this.fields.forEach(field => {
+                if (response.error[field]) {
+                  this.Toast.fire({
+                    timer: 10000,
+                    icon: "error",
+                    title: response.error[field]
+                  });
+                }
+              })
+            }
+          }
+        )
+        break;
+
+      case 'BD':
+        this.fields = ['code', 'libelle', 'site_id', 'message'];
+        this.bordereauService.create({ array: this.dataToSend }).subscribe(
+          {
+            next: response => {
+              this.chargement = false;
+              sessionStorage.setItem('request_status', "1");
+              this.reset();
+            },
+            error: response => {
+              this.chargement = false;
+              this.fields.forEach(field => {
+                if (response.error[field]) {
+                  this.Toast.fire({
+                    timer: 10000,
+                    icon: "error",
+                    title: response.error[field]
+                  });
+                }
+              })
+            }
+          }
+        )
+        break;
+
+      case 'BN':
+        this.fields = ['reference', 'code_inventaire_id', 'localisation_id', 'description', 'etat', 'service', 'message'];
+        this.bienService.create({ array: this.dataToSend }).subscribe(
+          {
+            next: response => {
+              this.chargement = false;
+              sessionStorage.setItem('request_status', "1");
+              this.reset();
+            },
+            error: response => {
+              this.chargement = false;
+              this.fields.forEach(field => {
+                if (response.error[field]) {
+                  this.Toast.fire({
+                    timer: 10000,
+                    icon: "error",
+                    title: response.error[field]
+                  });
+                }
+              })
+            }
+          }
+        )
+        break;
+
+      default:
+        this.data = [];
+        break;
+    }
   }
 
   showColumns() {
@@ -126,6 +287,10 @@ export class ImportationComponent implements OnInit {
                     code: data['N°Zone'],
                     zone: data['Zones']
                   })
+                  this.dataToSend.push({
+                    code: data['N°Zone'].toString(),
+                    libelle: data['Zones']
+                  });
                 }
                 break;
 
@@ -141,6 +306,11 @@ export class ImportationComponent implements OnInit {
                     code: data['N°Sites'],
                     site: data['Sites']
                   })
+                  this.dataToSend.push({
+                    code: data['N°Sites'].toString(),
+                    libelle: data['Sites'],
+                    zone_id: data['N°Sites'].toString().substr(0, 2)
+                  });
                 }
                 break;
 
@@ -156,6 +326,11 @@ export class ImportationComponent implements OnInit {
                     code: data['Code Localisation'],
                     localisation: data['Libelle Localisation']
                   })
+                  this.dataToSend.push({
+                    code: data['Code Localisation'],
+                    libelle: data['Libelle Localisation'],
+                    site_id: data['Code Localisation'].toString().substr(0, 4)
+                  });
                 }
                 break;
 
@@ -171,6 +346,11 @@ export class ImportationComponent implements OnInit {
                     code: data['CODE'],
                     bordereau: data['LIBELLE']
                   })
+                  this.dataToSend.push({
+                    code: data['CODE'],
+                    libelle: data['LIBELLE'],
+                    site_id: data['CODE'].toString().substr(0, 6)
+                  });
                 }
                 break;
 
@@ -193,6 +373,15 @@ export class ImportationComponent implements OnInit {
                     note: data['Note'],
                     estSupprime: data['Sup']
                   });
+                  this.dataToSend.push({
+                    reference: data['Référence'],
+                    code_inventaire: data['Code Inventaire'].toString(),
+                    localisation_code: data['Code Localisation'].toString(),
+                    description: data['Description'],
+                    etat: data['Etat'],
+                    service: data['Service'],
+                    date_enregistrement: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
+                  });
                 }
                 break;
 
@@ -204,8 +393,6 @@ export class ImportationComponent implements OnInit {
             this.data = [];
           }
         });
-
-        console.log(this.data);
       };
       reader.readAsBinaryString(file);
     }

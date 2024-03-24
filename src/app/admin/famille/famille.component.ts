@@ -17,6 +17,7 @@ export class FamilleComponent {
   familles: IFamille[] = [];
   chargement: boolean = false;
   chargementSuppr: boolean = false;
+  fields = ["id", "code", "libelle", "message"];
 
   Toast = Swal.mixin({
     toast: true,
@@ -53,11 +54,15 @@ export class FamilleComponent {
         },
         error: response => {
           this.chargement = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )
@@ -84,11 +89,15 @@ export class FamilleComponent {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -107,11 +116,15 @@ export class FamilleComponent {
           },
           error: response => {
             this.chargement = false;
-            this.Toast.fire({
-              timer: 10000,
-              icon: "error",
-              title: response.message
-            });
+            this.fields.forEach(field => {
+              if (response.error[field]) {
+                this.Toast.fire({
+                  timer: 10000,
+                  icon: "error",
+                  title: response.error[field]
+                });
+              }
+            })
           }
         }
       );
@@ -140,11 +153,15 @@ export class FamilleComponent {
         },
         error: response => {
           this.chargementSuppr = false;
-          this.Toast.fire({
-            timer: 10000,
-            icon: "error",
-            title: response.message
-          });
+          this.fields.forEach(field => {
+            if (response.error[field]) {
+              this.Toast.fire({
+                timer: 10000,
+                icon: "error",
+                title: response.error[field]
+              });
+            }
+          })
         }
       }
     )
