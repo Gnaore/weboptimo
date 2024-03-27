@@ -1,0 +1,141 @@
+<div class="fadein animation-duration-500">
+    <h3 class="ml-3 text-green-300 mb-1">Acquisition en attente de code inventaire</h3>
+    <p-breadcrumb styleClass="border-none p-1" [model]="[{ label: 'Acquisition en attente de code inventaire' }]"
+        [home]="{ label: 'Tableau de bord', icon: 'pi pi-home mr-2', routerLink: '/admin' }"></p-breadcrumb>
+    <div class="mt-4">
+        <div>
+            <p-table [loading]="chargement" styleClass="p-datatable-striped p-datatable-gridlines" [resizableColumns]="true"
+                [value]="acquisitions" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+                [tableStyle]="{ 'min-width': '50rem' }"
+                currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} enregistrements"
+                [rowsPerPageOptions]="[5, 10, 20]">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="numero">
+                            <div class="flex align-items-center">
+                                N° OP
+                                <p-sortIcon field="numero"></p-sortIcon>
+                                <p-columnFilter type="text" field="numero" display="menu" matchMode="contains"
+                                    [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                    [showClearButton]="false"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="date_acquisition">
+                            Date acquisition
+                            <p-sortIcon field="date_acquisition"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="date_mise_service">
+                            Date de mise en service
+                            <p-sortIcon field="date_mise_service"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="type_bien">
+                            <div class="flex align-items-center">
+                                Type de bien
+                                <p-sortIcon field="type_bien"></p-sortIcon>
+                                <p-columnFilter type="text" field="type_bien" display="menu" matchMode="contains"
+                                    [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                    [showClearButton]="false"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="famille.libelle">
+                            <div class="flex align-items-center">
+                                Famille
+                                <p-sortIcon field="famille.libelle"></p-sortIcon>
+                                <p-columnFilter type="text" field="famille.libelle" display="menu" matchMode="contains"
+                                    [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                    [showClearButton]="false"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="description">
+                            <div class="flex align-items-center">
+                                Description
+                                <p-sortIcon field="description"></p-sortIcon>
+                                <p-columnFilter type="text" field="description" display="menu" matchMode="contains"
+                                    [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                    [showClearButton]="false"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="valeur_acquisition">
+                            <div class="flex align-items-center">
+                                Valeur acquisition
+                                <p-sortIcon field="valeur_acquisition"></p-sortIcon>
+                            </div>
+                        </th>
+                        <th>
+                            Code inventaire
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-acquisition>
+                    <tr (click)="visible = true">
+                        <td>{{ acquisition.numero }}</td>
+                        <td>{{ acquisition.date_acquisition }}</td>
+                        <td>{{ acquisition.date_mise_service }}</td>
+                        <td>{{ acquisition.type_bien }}</td>
+                        <td>{{ acquisition.famille.libelle }}</td>
+                        <td>{{ acquisition.description }}</td>
+                        <td>{{ acquisition.valeur_acquisition }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de liaison -->
+<p-dialog header="Biens orphelins" [(visible)]="visible" [modal]="true" [style]="{ width: '60vw' }"
+    [draggable]="false" [resizable]="false">
+    <p-table styleClass="p-datatable-striped p-datatable-gridlines" [resizableColumns]="true"
+        [value]="[].constructor(5)" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} enregistrements"
+        [rowsPerPageOptions]="[5, 10, 20]">
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="code">
+                    <div class="flex align-items-center">
+                        Libellé localisation
+                        <p-sortIcon field="col.field"></p-sortIcon>
+                        <p-columnFilter type="text" field="name" display="menu" matchMode="in" [showMatchModes]="false"
+                            [showOperator]="false" [showAddButton]="false" [showClearButton]="false"></p-columnFilter>
+                    </div>
+                </th>
+                <th pSortableColumn="code">
+                    <div class="flex align-items-center">
+                        Code inventaire
+                        <p-sortIcon field="col.field"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="code">
+                    <div class="flex align-items-center">
+                        Référence
+                        <p-sortIcon field="col.field"></p-sortIcon>
+                    </div>
+                </th>
+                <th pSortableColumn="code">
+                    <div class="flex align-items-center">
+                        Description
+                        <p-sortIcon field="col.field"></p-sortIcon>
+                        <p-columnFilter type="text" field="name" display="menu" matchMode="in" [showMatchModes]="false"
+                            [showOperator]="false" [showAddButton]="false" [showClearButton]="false"></p-columnFilter>
+                    </div>
+                </th>
+                <th>
+                    Date acquisition
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-customer>
+            <tr>
+                <td>
+
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <div class="text-center mt-4">
+        <p-button type="button" icon="pi pi-times" label="Fermer" styleClass="p-button-text p-button-danger"
+            class="mr-2"></p-button>
+        <p-button type="button" icon="pi pi-check" label="Enregistrer"></p-button>
+    </div>
+</p-dialog>

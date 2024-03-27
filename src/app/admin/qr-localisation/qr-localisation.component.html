@@ -1,0 +1,92 @@
+<div class="fadein animation-duration-500">
+    <h3 class="ml-3 text-green-300 mb-1">Impression QRCode localisation</h3>
+    <p-breadcrumb styleClass="border-none p-1" [model]="[{ label: 'Impression QRCode localisation' }]"
+        [home]="{ label: 'Tableau de bord', icon: 'pi pi-home mr-2', routerLink: '/admin' }"></p-breadcrumb>
+        <div class="mt-4">
+            <div class="flex align-items-center justify-content-between">
+                <div class="flex">
+                    <div class="field" style="width: 350px;">
+                        <p-dropdown styleClass="w-full" [options]="zones" (onChange)="sitesByZone()" (onClear)="zoneSites = []; localisationsFiltres = [];" [(ngModel)]="selectedZone" optionLabel="libelle" [filter]="true"
+                            [showClear]="true" placeholder="Choisir la zone"></p-dropdown>
+                    </div>
+                    <div class="field ml-2" style="width: 350px;">
+                        <p-dropdown styleClass="w-full" [options]="zoneSites" [(ngModel)]="selectedSite" (onChange)="getLocalisations()" (onClear)="localisationsFiltres = [];" optionLabel="libelle" [filter]="true"
+                            [showClear]="true" placeholder="Choisir le site"></p-dropdown>
+                    </div>
+                </div>
+                <div>
+                    <p-button type="button" icon="pi pi-print" label="Imprimer la fiche" styleClass="p-button-text mb-3"></p-button>
+                <p-button type="button" icon="pi pi-qrcode" label="Imprimer QRCode" styleClass="p-button-text mb-3"></p-button>
+                </div>
+            </div>
+            <p-table styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm" [resizableColumns]="true" [value]="localisationsFiltres"
+                [paginator]="true" [rows]="50" [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+                currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} enregistrements"
+                [rowsPerPageOptions]="[5, 10, 20, 50]">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="code">
+                            <div class="flex align-items-center">
+                                Code localisation
+                                <p-sortIcon field="code"></p-sortIcon>
+                                <p-columnFilter type="text" field="code" display="menu" matchMode="contains"
+                                    [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                    [showClearButton]="false"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="libelle">
+                            <div class="flex align-items-center">
+                                Localisation
+                                <p-sortIcon field="libelle"></p-sortIcon>
+                                <p-columnFilter type="text" field="libelle" display="menu" matchMode="contains"
+                                    [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                    [showClearButton]="false"></p-columnFilter>
+                            </div>
+                        </th>
+                        <!-- <th pSortableColumn="code">
+                            <div class="flex align-items-center">
+                                Code site
+                                <p-sortIcon field="col.field"></p-sortIcon>
+                                <p-columnFilter type="text" field="name" display="menu" matchMode="in"
+                                    [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                    [showClearButton]="false"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="code">
+                            <div class="flex align-items-center">
+                                Site
+                                <p-sortIcon field="col.field"></p-sortIcon>
+                                <p-columnFilter type="text" field="name" display="menu" matchMode="in"
+                                    [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                    [showClearButton]="false"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="code">
+                            <div class="flex align-items-center">
+                                Code réseau
+                                <p-sortIcon field="col.field"></p-sortIcon>
+                                <p-columnFilter type="text" field="name" display="menu" matchMode="in"
+                                    [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                    [showClearButton]="false"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th pSortableColumn="code">
+                            <div class="flex align-items-center">
+                                Réseau
+                                <p-sortIcon field="col.field"></p-sortIcon>
+                                <p-columnFilter type="text" field="name" display="menu" matchMode="in"
+                                    [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                    [showClearButton]="false"></p-columnFilter>
+                            </div>
+                        </th> -->
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-localisation>
+                    <tr>
+                        <td>{{ localisation.code }}</td>
+                        <td>{{ localisation.libelle }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+</div>

@@ -1,0 +1,138 @@
+<div>
+    <p-button (onClick)="showModalEdit = true; formInit()" type="button" icon="pi pi-plus" label="Editer un bon de commande"
+        styleClass="p-button-text mb-3"></p-button>
+    <p-table [loading]="true" styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm" [resizableColumns]="true"
+        [value]="bonsCommandes" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} enregistrements"
+        [rowsPerPageOptions]="[5, 10, 20]">
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="numero_bc">
+                    <div class="flex align-items-center">
+                        N° commande
+                        <p-sortIcon field="numero_bc"></p-sortIcon>
+                        <p-columnFilter type="text" field="numero_bc" display="menu" matchMode="contains" [showMatchModes]="false"
+                            [showOperator]="false" [showAddButton]="false" [showClearButton]="false"></p-columnFilter>
+                    </div>
+                </th>
+                <th pSortableColumn="date">
+                    Date
+                    <p-sortIcon field="date"></p-sortIcon>
+                </th>
+                <th pSortableColumn="intitule">
+                    <div class="flex align-items-center">
+                        Intitulé
+                        <p-sortIcon field="intitule"></p-sortIcon>
+                        <p-columnFilter type="text" field="intitule" display="menu" matchMode="contains" [showMatchModes]="false"
+                            [showOperator]="false" [showAddButton]="false" [showClearButton]="false"></p-columnFilter>
+                    </div>
+                </th>
+                <th pSortableColumn="montant">
+                    <div class="flex align-items-center">
+                        Montant
+                        <p-sortIcon field="montant"></p-sortIcon>
+                        <p-columnFilter type="text" field="montant" display="menu" matchMode="contains" [showMatchModes]="false"
+                            [showOperator]="false" [showAddButton]="false" [showClearButton]="false"></p-columnFilter>
+                    </div>
+                </th>
+                <th pSortableColumn="fournisseur.libelle">
+                    <div class="flex align-items-center">
+                        Fournisseur
+                        <p-sortIcon field="fournisseur.libelle"></p-sortIcon>
+                        <p-columnFilter type="text" field="fournisseur.libelle" display="menu" matchMode="contains" [showMatchModes]="false"
+                            [showOperator]="false" [showAddButton]="false" [showClearButton]="false"></p-columnFilter>
+                    </div>
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-bc>
+            <tr>
+                <td>{{ bc.numero_bc }}</td>
+                <td>{{ bc.date }}</td>
+                <td>{{ bc.intitule }}</td>
+                <td>{{ bc.montant }}</td>
+                <td>{{ bc.fournisseur.libelle }}</td>
+                <td>
+                    <p-button [disabled]="chargementSuppr" (onClick)="supprimerBonCommande(bc.id)"
+                        type="button" icon="pi pi-trash" [loading]="chargementSuppr"
+                        styleClass="p-button-text p-button-danger"></p-button>
+                    <p-button (onClick)="showModalEdit = true; obtenirDonneesBonCommande(bc)" type="button"
+                        icon="pi pi-pencil" styleClass="p-button-text p-button-info"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorright">
+            <p-button type="button" icon="pi pi-file-import" label="Importer les données"
+                styleClass="p-button-text"></p-button>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- Modal d'édition d'un bon de commande -->
+<p-dialog header="Edition d'un bon de commande" [(visible)]="showModalEdit" [modal]="true" [style]="{ width: '45vw' }"
+    [draggable]="false" [resizable]="false">
+    <form [formGroup]="bonCommandeForm" (ngSubmit)="enregistrerBonCOmmande()">
+        <div class="grid">
+            <div class="col-6">
+                <div class="field">
+                    <label>Fournisseur</label>
+                    <p-dropdown styleClass="w-full" [options]="fournisseurs" [ngModelOptions]="{ standalone: true }" [(ngModel)]="selectedFournisseur" [showClear]="true"
+                        [filter]="true" placeholder="Choisir le fournisseur"></p-dropdown>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="field">
+                    <label>N° Bon de commande</label>
+                    <input formControlName="numero_bc" type="text" pInputText class="block w-full" />
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label>Intitulé</label>
+            <input formControlName="intitule" type="text" pInputText class="block w-full" />
+        </div>
+        <div class="grid">
+            <div class="col-6">
+                <div class="field">
+                    <label>Date</label>
+                    <input formControlName="date" type="date" pInputText class="block w-full" />
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="field">
+                    <label>Montant</label>
+                    <p-inputNumber formControlName="montant" inputId="integeronly" class="block" styleClass="w-full"></p-inputNumber>
+                </div>
+            </div>
+        </div>
+        <div class="grid">
+            <div class="col-6">
+                <div class="field">
+                    <label>Note</label>
+                    <textarea formControlName="note" rows="6" pInputTextarea class="block w-full"></textarea>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="field">
+                    <label>Pièce jointe</label>
+                    <p-fileUpload [auto]="true" chooseLabel="Charger le fichier" uploadIcon="pi pi-cog mr-2"
+                        uploadLabel="Traitement" [showCancelButton]="false" accept=".pdf">
+                        <ng-template let-file pTemplate="file">
+                            <div>Custom UI to display a file</div>
+                        </ng-template>
+                    </p-fileUpload>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-2">
+            <p-button type="button" icon="pi pi-times" label="Annuler" (onClick)="showModalEdit = false"
+                styleClass="p-button-text p-button-danger" class="mr-2"></p-button>
+            <p-button type="submit" [loading]="chargement" [disabled]="bonCommandeForm.invalid || chargement"
+                icon="pi pi-save" label="Enregistrer"></p-button>
+        </div>
+    </form>
+</p-dialog>

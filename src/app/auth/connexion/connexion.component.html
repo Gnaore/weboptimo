@@ -1,0 +1,33 @@
+<h1 class="fixed m-3 text-green-300 flip animation-duration-1000">Opt'Immo</h1>
+<div class="login-body">
+    <div class="login-panel p-fluid fadein animation-duration-1000">
+        <form [formGroup]="authForm" class="grid grid-nogutter" (ngSubmit)="login()">
+            <div class="col-12 login-header">
+                <h1>Authentification</h1>
+                <h2>Bienvenue sur Opt'Immo</h2>
+                <img src="assets/layout/images/logo.png">
+            </div>
+            <div class="col-12">
+                <span class="p-float-label">
+                    <input formControlName="email" type="text" pInputText placeholder="votre email" id="email">
+                    <label>Nom d'utilisateur</label>
+                </span>
+            </div>
+            <div class="col-12">
+                <span class="p-float-label">
+                    <input formControlName="password" type="password" pInputText>
+                    <label>Mot de passe</label>
+                </span>
+            </div>
+            <div class="col-12" *ngIf="isLoading">
+                <p-progressBar mode="indeterminate" [style]="{ height: '6px' }"></p-progressBar>
+            </div>
+            <div class="col-12" *ngIf="isError">
+                <p-message class="scalein animation-duration-300" severity="error" text="Echec de l'authentification. Nom d'utilisateur ou mot de passe invalide. Veuillez réessayer svp !"></p-message>
+            </div>
+            <div class="col-12 button-container">
+                <button pButton label="VALIDER"></button>
+            </div>
+        </form>
+    </div>
+</div>

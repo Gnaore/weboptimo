@@ -1,0 +1,131 @@
+<div class="fadein animation-duration-500" style="height: 100%; display: flex; flex-direction: column;">
+    <h3 class="ml-3 text-green-300 mb-1">Gestion des bordereaux</h3>
+    <p-breadcrumb styleClass="border-none p-1" [model]="[{ label: 'Gestion des bordereaux' }]"
+        [home]="{ label: 'Tableau de bord', icon: 'pi pi-home mr-2', routerLink: '/admin' }"></p-breadcrumb>
+    <div class="grid mt-3" style="flex-grow: 1;">
+        <div class="col-2 p-0 flex flex-column">
+            <button class="py-1" (click)="closeAllTreeviews()">{{ !hideAllTreeview ? 'Tout réduire -': 'Tout afficher +'
+                }}</button>
+            <div class="px-2 overflow-auto flex-grow-1" style="height: 0px;">
+                <h5 class="mt-3">Emplacements</h5>
+                <ul class="treeview">
+                    <li *ngFor="let zone of zones;" (dblclick)="toggleTreeview($event)">
+                        <span class="treeview-zone">{{ zone.libelle }}</span>
+                        <ul class="sub-treeview">
+                            <li *ngFor="let site of zone.sites;">
+                                <span class="treeview-site">{{ site.libelle }}</span>
+                                <ul class="sub-treeview">
+                                    <li [ngClass]="{'active': codeBordereau === bordereau.code}"
+                                        *ngFor="let bordereau of listeBordereauxParSite(site.code);"
+                                        (click)="filtreBien('bordereau', bordereau.code); libelleSelection = zone.libelle + ' | ' + site.libelle + ' :: ' + bordereau.libelle"
+                                        class="treeview-localisation">{{ bordereau.libelle }}</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-10 px-3">
+            <div class="grid">
+                <div class="col-6">
+                    <div>
+                        <h4 class="mt-3 font-bold"># {{ libelleSelection }}</h4>
+                    </div>
+                </div>
+                <div class="col-6 mb-5 text-right">
+                    <!-- <p-button icon="pi pi-cog" label="Générer des codes"></p-button> -->
+                    <p-button icon="pi pi-print" label="Imprimer les fiches" class="mx-2"></p-button>
+                    <p-button icon="pi pi-qrcode" label="Imprimer QRCode"></p-button>
+                </div>
+            </div>
+            <div>
+                <p-table [loading]="chargement" styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm"
+                    [resizableColumns]="true" [value]="codesInventairesFiltres" [paginator]="true" [rows]="25"
+                    [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+                    currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} enregistrements"
+                    [rowsPerPageOptions]="[5, 10, 25]">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <!-- <th pSortableColumn="localisation.code">
+                                <div class="flex align-items-center">
+                                    Code Localisation
+                                    <p-sortIcon field="localisation.code"></p-sortIcon>
+                                    <p-columnFilter type="text" field="localisation.code" display="menu" matchMode="contains"
+                                        [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                        [showClearButton]="false"></p-columnFilter>
+                                </div>
+                            </th> -->
+                            <!-- <th pSortableColumn="localisation.libelle">
+                                <div class="flex align-items-center">
+                                    Localisation
+                                    <p-sortIcon field="localisation.libelle"></p-sortIcon>
+                                    <p-columnFilter type="text" field="localisation.libelle" display="menu" matchMode="contains"
+                                        [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                        [showClearButton]="false"></p-columnFilter>
+                                </div>
+                            </th> -->
+                            <th pSortableColumn="code">
+                                <div class="flex align-items-center">
+                                    Code Inventaire
+                                    <p-sortIcon field="code"></p-sortIcon>
+                                    <p-columnFilter type="text" field="code" display="menu" matchMode="contains"
+                                        [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                        [showClearButton]="false"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="bien.description">
+                                <div class="flex align-items-center">
+                                    Libellé du bien
+                                    <p-sortIcon field="bien.description"></p-sortIcon>
+                                    <p-columnFilter type="text" field="bien.description" display="menu"
+                                        matchMode="contains" [showMatchModes]="false" [showOperator]="false"
+                                        [showAddButton]="false" [showClearButton]="false"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="bien.reference">
+                                Référence
+                                <p-sortIcon field="bien.reference"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="bien.service">
+                                Service
+                                <p-sortIcon field="bien.service"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="bien.etat">
+                                Etat
+                                <p-sortIcon field="bien.etat"></p-sortIcon>
+                            </th>
+                            <!-- <th pSortableColumn="code">
+                                Rebut
+                                <p-sortIcon field="col.field"></p-sortIcon>
+                            </th> -->
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-code>
+                        <tr>
+                            <!-- <td>{{ bien.localisation.code }}</td>
+                            <td>{{ bien.localisation.libelle }}</td> -->
+                            <td>{{ code.code }}</td>
+                            <ng-container *ngIf="code.bien">
+                                <td>{{ code.bien.description }}</td>
+                                <td>{{ code.bien.reference }}</td>
+                                <td>{{ code.bien.service }}</td>
+                                <td>{{ code.bien.etat }}</td>
+                            </ng-container>
+                            <ng-container *ngIf="!code.bien">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </ng-container>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorright">
+                        <p-button type="button" icon="pi pi-file-export" label="Exporter les données"
+                            styleClass="p-button-text"></p-button>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>

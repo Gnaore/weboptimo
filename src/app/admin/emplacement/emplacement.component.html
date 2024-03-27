@@ -1,0 +1,196 @@
+<div class="fadein animation-duration-500" style="height: 100%; display: flex; flex-direction: column;">
+    <h3 class="ml-3 text-green-300 mb-1">Gestion des emplacements</h3>
+    <p-breadcrumb styleClass="border-none p-1" [model]="[{ label: 'Gestion des emplacements' }]"
+        [home]="{ label: 'Tableau de bord', icon: 'pi pi-home mr-2', routerLink: '/admin' }"></p-breadcrumb>
+    <div class="grid mt-3" style="flex-grow: 1;">
+        <div class="col-2 p-0 flex flex-column">
+            <button class="py-1" (click)="closeAllTreeviews()">{{ !hideAllTreeview ? 'Tout réduire -': 'Tout afficher +' }}</button>
+            <div class="px-2 overflow-auto flex-grow-1" style="height: 0px;">
+                <h5 class="mt-3">Emplacements</h5>
+                <ul class="treeview">
+                    <li *ngFor="let zone of zones;" (dblclick)="toggleTreeview($event)">
+                        <span class="treeview-zone">{{ zone.libelle }}</span>
+                        <ul class="sub-treeview">
+                            <li *ngFor="let site of zone.sites;">
+                                <span class="treeview-site" (click)="filtreBien('site', site.id);">{{ site.libelle }}</span>
+                                <ul class="sub-treeview">
+                                    <li [ngClass]="{'active': idLocalisation === localisation.id}" *ngFor="let localisation of listeLocalisationParSite(site.id);" (click)="filtreBien('localisation', localisation.id); idLocalisation = localisation.id" class="treeview-localisation">{{ localisation.libelle }}</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-10 px-3">
+            <div class="grid">
+                <div class="col-4">
+                    <p-dropdown styleClass="w-full" [options]="[
+                        { name: 'Tous les biens' },
+                        { name: 'Biens confinés' },
+                        { name: 'Biens mis au rebut' }
+                    ]" optionLabel="name" placeholder="Filtrer les données"></p-dropdown>
+                </div>
+                <div class="col-8 mb-5 text-right">
+                    <p-button icon="pi pi-map-marker" label="Créer une nouvelle zone"
+                        (onClick)="showModalZone = true"></p-button>
+                    <p-button icon="pi pi-building" label="Créer un nouveau site" class="mx-2"
+                        (onClick)="showModalSite = true"></p-button>
+                    <p-button icon="pi pi-home" label="Créer une nouvelle localisation"
+                        (onClick)="showModalLocalisation = true"></p-button>
+                </div>
+            </div>
+            <div>
+                <h3>{{ nbrBiens }} Bien(s) identifié(s)</h3>
+                <p-table [loading]="chargement" styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm" [resizableColumns]="true" [value]="biensFiltres"
+                    [paginator]="true" [rows]="50" [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+                    currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} enregistrements"
+                    [rowsPerPageOptions]="[5, 10, 20, 50]">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="localisation.code">
+                                <div class="flex align-items-center">
+                                    Code Localisation
+                                    <p-sortIcon field="localisation.code"></p-sortIcon>
+                                    <p-columnFilter type="text" field="localisation.code" display="menu" matchMode="contains"
+                                        [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                        [showClearButton]="false"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="localisation.libelle">
+                                <div class="flex align-items-center">
+                                    Localisation
+                                    <p-sortIcon field="localisation.libelle"></p-sortIcon>
+                                    <p-columnFilter type="text" field="localisation.libelle" display="menu" matchMode="contains"
+                                        [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                        [showClearButton]="false"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="code_inventaire.code">
+                                <div class="flex align-items-center">
+                                    Code Inventaire
+                                    <p-sortIcon field="code_inventaire.code"></p-sortIcon>
+                                    <p-columnFilter type="text" field="code_inventaire.code" display="menu" matchMode="contains"
+                                        [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                        [showClearButton]="false"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="description">
+                                <div class="flex align-items-center">
+                                    Libellé du bien
+                                    <p-sortIcon field="description"></p-sortIcon>
+                                    <p-columnFilter type="text" field="description" display="menu" matchMode="contains"
+                                        [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"
+                                        [showClearButton]="false"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="reference">
+                                Référence
+                                <p-sortIcon field="reference"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="service">
+                                Service
+                                <p-sortIcon field="service"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="etat">
+                                Etat
+                                <p-sortIcon field="etat"></p-sortIcon>
+                            </th>
+                            <!-- <th pSortableColumn="code">
+                                Rebut
+                                <p-sortIcon field="col.field"></p-sortIcon>
+                            </th> -->
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-bien>
+                        <tr>
+                            <td>{{ bien.localisation.code }}</td>
+                            <td>{{ bien.localisation.libelle }}</td>
+                            <td>{{ bien.code_inventaire.code }}</td>
+                            <td>{{ bien.description }}</td>
+                            <td>{{ bien.reference }}</td>
+                            <td>{{ bien.service }}</td>
+                            <td>{{ bien.etat }}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorright">
+                        <p-button type="button" icon="pi pi-file-export" label="Exporter les données"
+                            styleClass="p-button-text"></p-button>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal d'ajout d'une zone -->
+<p-dialog header="Nouvelle Zone" [(visible)]="showModalZone" [modal]="true" [style]="{ width: '35vw' }"
+    [draggable]="false" [resizable]="false">
+    <form [formGroup]="zoneForm" (ngSubmit)="enregistrerZone()">
+        <div class="field">
+            <label>Code zone</label>
+            <input formControlName="code" type="text" pInputText class="block w-full" />
+        </div>
+        <div class="field">
+            <label>Libelle zone</label>
+            <input formControlName="libelle" type="text" pInputText class="block w-full" />
+        </div>
+        <div class="text-center mt-2">
+            <p-button type="button" icon="pi pi-times" label="Annuler" styleClass="p-button-text p-button-danger"
+                class="mr-2"></p-button>
+            <p-button type="submit" icon="pi pi-save" [loading]="chargement" [disabled]="zoneForm.invalid || chargement" label="Enregistrer"></p-button>
+        </div>
+    </form>
+</p-dialog>
+
+<!-- Modal d'ajout d'un site -->
+<p-dialog header="Nouveau Site" [(visible)]="showModalSite" [modal]="true" [style]="{ width: '35vw' }"
+    [draggable]="false" [resizable]="false">
+    <form [formGroup]="siteForm" (ngSubmit)="enregistrerSite()">
+        <div class="field">
+            <label>Zone</label>
+            <p-dropdown styleClass="w-full" (onChange)="genererCodeSite()" [ngModelOptions]="{standalone: true}" [options]="zones" [(ngModel)]="selectedZone" optionLabel="libelle" [filter]="true"
+                [showClear]="true" placeholder="Choisir la zone"></p-dropdown>
+        </div>
+        <div class="field">
+            <label>Code</label>
+            <input type="text" disabled formControlName="code" pInputText class="block w-full" />
+        </div>
+        <div class="field">
+            <label>Libelle du site</label>
+            <input type="text" pInputText formControlName="libelle" class="block w-full" />
+        </div>
+        <div class="text-center mt-2">
+            <p-button type="button" icon="pi pi-times" label="Annuler" styleClass="p-button-text p-button-danger"
+                class="mr-2"></p-button>
+            <p-button type="submit" [loading]="chargement" [disabled]="siteForm.invalid || chargement" icon="pi pi-save" label="Enregistrer"></p-button>
+        </div>
+    </form>
+</p-dialog>
+
+<!-- Modal d'ajout d'une localisation -->
+<p-dialog header="Nouvelle Localisation" [(visible)]="showModalLocalisation" [modal]="true" [style]="{ width: '35vw' }"
+    [draggable]="false" [resizable]="false">
+    <form [formGroup]="localisationForm" (ngSubmit)="enregistrerLocalisation()">
+        <div class="field">
+            <label>Site</label>
+            <p-dropdown styleClass="w-full" (onChange)="genererCodeLocalisation()" [options]="sites" [ngModelOptions]="{ standalone: true }"
+                [(ngModel)]="selectedSite" optionLabel="libelle" [filter]="true" [showClear]="true"
+                placeholder="Choisir le site"></p-dropdown>
+        </div>
+        <div class="field">
+            <label>Code</label>
+            <input type="text" disabled formControlName="code" pInputText class="block w-full" />
+        </div>
+        <div class="field">
+            <label>Libelle</label>
+            <input type="text" formControlName="libelle" pInputText class="block w-full" />
+        </div>
+        <div class="text-center mt-2">
+            <p-button type="button" icon="pi pi-times" label="Annuler" styleClass="p-button-text p-button-danger"
+                class="mr-2"></p-button>
+            <p-button type="submit" [loading]="chargement" [disabled]="localisationForm.invalid || chargement"
+                icon="pi pi-save" label="Enregistrer"></p-button>
+        </div>
+    </form>
+</p-dialog>
